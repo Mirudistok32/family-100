@@ -5,9 +5,11 @@ interface Props {
   id: string;
   label: string;
   sensitive?: boolean;
+  /** Id элемента с пояснением над полем, если оно есть. */
+  describedBy?: string | undefined;
 }
 
-const { id, label, sensitive = false } = Astro.props;
+const { id, label, sensitive = false, describedBy } = Astro.props;
 const fieldId = `note-${id}`.replaceAll('/', '-');
 const hintId = `${fieldId}-hint`;
 ---
@@ -16,6 +18,7 @@ const hintId = `${fieldId}-hint`;
   <label class="note-field__label" for={fieldId}>
     {label}
   </label>
+  <slot name="prompt" />
   <textarea
     id={fieldId}
     class="note-field__input"
@@ -23,7 +26,7 @@ const hintId = `${fieldId}-hint`;
     maxlength={MAX_NOTE_LENGTH}
     autocomplete="off"
     spellcheck={sensitive ? 'false' : undefined}
-    aria-describedby={hintId}
+    aria-describedby={describedBy ? `${describedBy} ${hintId}` : hintId}
     data-note-id={id}
     data-sensitive={sensitive ? '' : undefined}
   ></textarea>

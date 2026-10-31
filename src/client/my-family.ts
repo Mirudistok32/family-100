@@ -10,9 +10,17 @@ import {
   MAX_BACKUP_BYTES,
   parseBackup,
 } from '@/domain/backup';
+import { AUDIT_NOTE_ID } from '@/domain/capital-audit';
+import { VERSION_NOTE_ID } from '@/domain/constitution';
 import { countNotes, dropUnconsented, NOTES_KEY, parseNotes } from '@/domain/notes';
 import { parseProgress, PROGRESS_KEY } from '@/domain/progress';
 import { readItem, removeItem, writeItem } from '@/lib/storage';
+
+/** Записи инструментов: поля для них на странице нет, а в предпросмотре копии подпись нужна. */
+const TOOL_LABELS: Record<string, string> = {
+  [AUDIT_NOTE_ID]: 'Аудит капиталов',
+  [VERSION_NOTE_ID]: 'Версия семейной конституции',
+};
 
 const PROBLEMS: Record<BackupProblem | 'too-big' | 'unreadable', string> = {
   'not-json': 'Это не файл копии: внутри не JSON. Твои данные не изменились.',
@@ -58,7 +66,9 @@ function labelFor(id: string): string {
   const field = document.querySelector<HTMLTextAreaElement>(
     `textarea[data-note-id="${CSS.escape(id)}"]`,
   );
-  return field?.labels?.[0]?.textContent?.trim() ?? 'Запись из другой версии курса';
+  return (
+    field?.labels?.[0]?.textContent?.trim() ?? TOOL_LABELS[id] ?? 'Запись из другой версии курса'
+  );
 }
 
 function hidePreview(): void {

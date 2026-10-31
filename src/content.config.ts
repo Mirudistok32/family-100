@@ -35,6 +35,8 @@ const lessons = defineCollection({
       text: z.string().min(1),
       /** Инструмент задания. `my-situation` ничего не сохраняет, `capital-audit` хранит ответы в записях. */
       tool: z.enum(['my-situation', 'capital-audit']).optional(),
+      /** Ссылка под заданием. Адрес от корня сайта, подпапку добавляет шаблон. */
+      link: z.object({ href: z.string().startsWith('/'), label: z.string().min(1) }).optional(),
       fields: z
         .array(
           z.object({

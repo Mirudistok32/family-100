@@ -1,56 +1,79 @@
 ---
+import Constitution from '@/components/Constitution.astro';
 import NoteField from '@/components/NoteField.astro';
+import { CONSTITUTION_SECTIONS } from '@/data/constitution';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { visibleLessons } from '@/lib/lessons';
 import { lessonHref } from '@/lib/urls';
 
 const lessons = (await visibleLessons()).filter((lesson) => lesson.data.task.fields.length > 0);
+
+// Запись из конституции показываем только там: одно поле на запись, иначе два поля разойдутся на странице.
+const inConstitution = new Set(CONSTITUTION_SECTIONS.map((section) => section.noteId));
 ---
 
 <BaseLayout
   title="Мои записи"
-  description="Твои записи по заданиям курса, копия данных и удаление. Всё хранится только в этом браузере."
+  description="Твои записи по заданиям курса, семейная конституция, копия данных и удаление. Всё хранится только в этом браузере."
 >
   <div class="wrap">
     <div class="prose">
-      <p class="hand">только для тебя</p>
-      <h1>Мои записи</h1>
+      <div class="no-print">
+        <p class="hand">только для тебя</p>
+        <h1>Мои записи</h1>
 
-      <aside class="callout callout--calm" aria-label="Где лежат данные">
+        <aside class="callout callout--calm" aria-label="Где лежат данные">
+          <p>
+            Записи и отметки лежат только в этом браузере на этом устройстве. Никуда они не
+            отправляются: на сайте нет ни аккаунтов, ни сервера для них. Если браузер очистят,
+            вернуть записи можно только из копии, поэтому ниже есть кнопка «Скачать копию».
+          </p>
+          <p>На общем устройстве записи может увидеть другой человек.</p>
+        </aside>
+
         <p>
-          Записи и отметки лежат только в этом браузере на этом устройстве. Никуда они не
-          отправляются: на сайте нет ни аккаунтов, ни сервера для них. Если браузер очистят, вернуть
-          записи можно только из копии, поэтому ниже есть кнопка «Скачать копию».
+          Здесь же можно собрать <a href="#constitution">семейную конституцию</a>.
         </p>
-        <p>На общем устройстве записи может увидеть другой человек.</p>
-      </aside>
 
-      <p class="callout" data-js-off>
-        Без JavaScript записи не сохраняются. Прочитать задания можно, а копия и удаление не
-        работают.
-      </p>
+        <p class="callout" data-js-off>
+          Без JavaScript записи не сохраняются. Прочитать задания можно, а копия и удаление не
+          работают.
+        </p>
 
-      <p class="save-problem" data-notes-problem role="alert" hidden>
-        Браузер не даёт сохранить запись. Пока страница открыта, она видна в поле, но после закрытия
-        пропадёт.
-      </p>
+        <p class="save-problem" data-notes-problem role="alert" hidden>
+          Браузер не даёт сохранить запись. Пока страница открыта, она видна в поле, но после
+          закрытия пропадёт.
+        </p>
 
-      <h2>Задания по дням</h2>
-      {lessons.map(({ data }) => (
-        <section class="note-group" aria-labelledby={`notes-${data.task.id}`}>
-          <h3 id={`notes-${data.task.id}`}>
-            <a href={lessonHref(data.day, data.part)}>
-              День {data.day}. {data.title}
-            </a>
-          </h3>
-          <p>{data.task.text}</p>
-          {data.task.fields.map((field) => (
-            <NoteField id={field.id} label={field.label} sensitive={field.sensitive} />
-          ))}
-        </section>
-      ))}
+        <h2>Задания по дням</h2>
+        {lessons.map(({ data }) => {
+          const own = data.task.fields.filter((field) => !inConstitution.has(field.id));
+          const moved = data.task.fields.length - own.length;
+          return (
+            <section class="note-group" aria-labelledby={`notes-${data.task.id}`}>
+              <h3 id={`notes-${data.task.id}`}>
+                <a href={lessonHref(data.day, data.part)}>
+                  День {data.day}. {data.title}
+                </a>
+              </h3>
+              <p>{data.task.text}</p>
+              {own.map((field) => (
+                <NoteField id={field.id} label={field.label} sensitive={field.sensitive} />
+              ))}
+              {moved > 0 && (
+                <p class="small muted">
+                  {moved === 1 ? 'Ещё одна запись этого задания' : 'Другие записи этого задания'} —
+                  в <a href="#constitution">семейной конституции</a> на этой странице.
+                </p>
+              )}
+            </section>
+          );
+        })}
+      </div>
 
-      <div data-needs-js hidden>
+      <Constitution />
+
+      <div class="no-print" data-needs-js hidden>
         <h2 id="backup">Копия данных</h2>
         <p>
           Копия — это файл JSON с отметками и сохранёнными записями. С ней можно перенести данные на
@@ -120,4 +143,5 @@ const lessons = (await visibleLessons()).filter((lesson) => lesson.data.task.fie
 
 <script>
   import '@/client/my-family';
+  import '@/client/constitution';
 </script>

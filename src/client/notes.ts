@@ -42,10 +42,14 @@ export function renderNotes(): void {
   }
 }
 
+/** Событие на `document`: записи перечитаны, и то, что из них собрано на странице, пора обновить. */
+export const NOTES_RELOADED = 'family100:notes-reloaded';
+
 /** Перечитывает хранилище: после импорта, удаления или записи из другой вкладки. */
 export function reloadNotes(): void {
   notes = parseNotes(readItem(NOTES_KEY));
   renderNotes();
+  document.dispatchEvent(new Event(NOTES_RELOADED));
 }
 
 /** Запись инструмента на странице. Идёт через ту же копию записей, иначе поля затёрли бы её своим сохранением. */

@@ -1,0 +1,85 @@
+---
+import NoteField from '@/components/NoteField.astro';
+import { CONSTITUTION_SECTIONS, VERSION_QUESTION, VERSION_TITLES } from '@/data/constitution';
+import { SITE_TITLE } from '@/data/days';
+import { AUDIENCES } from '@/domain/capital-audit';
+import { DEFAULT_VERSION } from '@/domain/constitution';
+import { href } from '@/lib/urls';
+---
+
+<section class="constitution" data-constitution aria-labelledby="constitution">
+  <div class="no-print">
+    <h2 id="constitution">Семейная конституция</h2>
+    <p>
+      Короткий текст о том, какой будет твоя семья: на одном-двух листах, чтобы можно было
+      распечатать. Заполняй части в любом порядке, пустые на лист не попадут.
+    </p>
+    <aside class="callout callout--calm" aria-label="Что это за документ">
+      <p>
+        Это не закон и не брачный договор, а договорённость. Никакая конституция не обязывает
+        оставаться рядом с насилием. Если дома опасно, сначала посмотри
+        <a href={href('/help/')}>«Помощь»</a>.
+      </p>
+    </aside>
+
+    <fieldset class="situation__group" data-needs-js hidden>
+      <legend>{VERSION_QUESTION}</legend>
+      {AUDIENCES.map((version) => (
+        <label class="situation__option">
+          <input
+            type="radio"
+            name="constitution-version"
+            value={version}
+            checked={version === DEFAULT_VERSION}
+          />
+          <span>{VERSION_TITLES[version]}</span>
+        </label>
+      ))}
+    </fieldset>
+
+    {CONSTITUTION_SECTIONS.map((section) => (
+      <NoteField
+        id={section.noteId}
+        label={section.label}
+        sensitive={section.sensitive}
+        describedBy={`prompt-${section.noteId}`}
+      >
+        <div slot="prompt" id={`prompt-${section.noteId}`}>
+          {AUDIENCES.map((version) => (
+            <p class="constitution__prompt" data-constitution-for={version}>
+              {section.prompts[version]}
+            </p>
+          ))}
+        </div>
+      </NoteField>
+    ))}
+  </div>
+
+  <div data-needs-js hidden>
+    <div class="no-print">
+      <h3>Как это выглядит на листе</h3>
+      <p class="button-row">
+        <button class="btn" type="button" data-constitution-print>
+          Распечатать или сохранить в PDF
+        </button>
+      </p>
+      <p class="small muted">
+        Чтобы получить файл, в окне печати выбери «Сохранить как PDF». Лист и файл могут увидеть
+        другие люди, поэтому на общем устройстве файл лучше не оставлять.
+      </p>
+      <p class="data-status data-status--problem" data-constitution-status role="status"></p>
+    </div>
+
+    <article class="constitution-sheet" data-constitution-sheet>
+      <p class="hand constitution-sheet__label">семейная конституция</p>
+      <h3 class="constitution-sheet__title" data-constitution-title></h3>
+      <p class="constitution-sheet__lead" data-constitution-lead></p>
+      <div data-constitution-body></div>
+      <p class="constitution-sheet__dates">
+        <span>Написано: ____________</span>
+        <span>Перечитать: ____________</span>
+      </p>
+      <p class="constitution-sheet__from">Из курса «{SITE_TITLE}».</p>
+    </article>
+  </div>
+</section>

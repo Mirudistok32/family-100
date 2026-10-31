@@ -603,6 +603,45 @@ main:focus {
   margin-bottom: 0;
 }
 
+.note-field .constitution__prompt {
+  margin: 0 0 var(--space-2);
+}
+.constitution-sheet {
+  margin-block: var(--space-5);
+  padding: var(--space-5);
+  background: var(--paper-raised);
+  border: 1px solid var(--rule-faint);
+}
+.constitution-sheet__label {
+  margin-bottom: var(--space-1);
+}
+.constitution-sheet__title {
+  margin-top: 0;
+  font-size: var(--text-h2);
+}
+.constitution-sheet__part {
+  margin-block: var(--space-4);
+}
+.constitution-sheet__part h4 {
+  margin: 0 0 var(--space-1);
+}
+.constitution-sheet__text {
+  margin: 0;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.constitution-sheet__dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  margin-top: var(--space-5);
+}
+.constitution-sheet__from {
+  margin: var(--space-3) 0 0;
+  color: var(--ink-soft);
+  font-size: var(--text-small);
+}
+
 /* Печать: белый лист, чёрный текст, без шапки и лишнего цвета. Одна памятка — один лист A4. */
 @page {
   size: A4;
@@ -674,6 +713,22 @@ main:focus {
   }
   .memo-sheet:last-child {
     break-after: auto;
+  }
+
+  .constitution-sheet {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .constitution-sheet__part {
+    margin-block: 8pt;
+  }
+  .constitution-sheet__part h4 {
+    break-after: avoid;
+  }
+  .constitution-sheet__dates {
+    margin-top: 12pt;
+    break-inside: avoid;
   }
 }
 

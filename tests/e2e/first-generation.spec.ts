@@ -6,6 +6,7 @@ const RECORDS = `${BASE}/my-family/`;
 const RULES = 'textarea[data-note-id="d5-first-generation-task-rules"]';
 const KEEP = 'input[data-note-keep="d5-first-generation-task-rules"]';
 const NOTES_KEY = 'family100:notes:v1';
+const SHEET = '[data-constitution-sheet]';
 const TEXT = 'В моём доме не бьют.';
 
 async function savedNotes(page: Page): Promise<string> {
@@ -19,10 +20,10 @@ test('правила без согласия не сохраняются и до
   expect(await savedNotes(page)).not.toContain(TEXT);
   await page.goto(RECORDS);
   await expect(page.locator(RULES)).toHaveValue('');
+  await expect(page.locator(SHEET)).not.toContainText(TEXT);
 });
 
-// Этот же сценарий проверит и передачу правил в конституцию, когда появится конструктор (4.4).
-test('правила с согласием доходят до страницы записей и остаются там', async ({ page }) => {
+test('правила с согласием доходят до конституции и остаются там', async ({ page }) => {
   await page.goto(PAGE);
   await page.locator(KEEP).check();
   await page.locator(RULES).fill(TEXT);
@@ -31,8 +32,17 @@ test('правила с согласием доходят до страницы 
   await page.goto(RECORDS);
   await expect(page.locator(RULES)).toHaveValue(TEXT);
   await expect(page.locator(KEEP)).toBeChecked();
+  await expect(page.locator(SHEET)).toContainText(TEXT);
   await page.reload();
   await expect(page.locator(RULES)).toHaveValue(TEXT);
+  await expect(page.locator(SHEET)).toContainText(TEXT);
+
+  // Согласие общее с днём 5: выключили здесь, и правил больше нет в хранилище.
+  await page.locator(KEEP).uncheck();
+  await expect.poll(() => savedNotes(page)).not.toContain(TEXT);
+  await page.goto(PAGE);
+  await expect(page.locator(RULES)).toHaveValue('');
+  await expect(page.locator(KEEP)).not.toBeChecked();
 });
 
 test('часть говорит, что повторение не приговор, и ведёт к помощи', async ({ page }) => {

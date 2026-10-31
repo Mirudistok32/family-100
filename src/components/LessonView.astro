@@ -44,6 +44,11 @@ const Memo = memo ? (await render(memo)).Content : undefined;
     {data.task.fields.map((field) => (
       <NoteField id={field.id} label={field.label} sensitive={field.sensitive} />
     ))}
+    {data.task.link && (
+      <p>
+        <a href={href(data.task.link.href)}>{data.task.link.label}</a>
+      </p>
+    )}
     {data.task.fields.length > 0 && (
       <>
         <p class="save-problem" data-notes-problem role="alert" hidden>
