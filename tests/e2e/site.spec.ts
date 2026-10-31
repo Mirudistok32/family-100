@@ -17,6 +17,7 @@ const PAGES = [
   `${BASE}/day/6/`,
   `${BASE}/day/6/people/`,
   `${BASE}/day/6/means/`,
+  `${BASE}/day/7/`,
   `${BASE}/my-family/`,
   `${BASE}/help/`,
 ];
