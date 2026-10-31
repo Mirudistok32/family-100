@@ -8,6 +8,8 @@ const PAGES = [
   `${BASE}/day/1/`,
   `${BASE}/day/2/`,
   `${BASE}/day/3/`,
+  `${BASE}/day/4/`,
+  `${BASE}/day/5/`,
   `${BASE}/my-family/`,
   `${BASE}/help/`,
 ];
@@ -108,6 +110,26 @@ test('внутренняя ссылка из текста урока ведёт 
   await page.goto(`${BASE}/day/1/`);
   await page.locator('.block--essence').getByRole('link', { name: '«Помощь»' }).click();
   await expect(page).toHaveURL(new RegExp(`${BASE}/help/$`));
+});
+
+test('день 4 отделяет ссору от насилия и ведёт к дню 5 и к помощи', async ({ page }) => {
+  await page.goto(`${BASE}/day/4/`);
+  const essence = page.locator('.block--essence');
+  await expect(essence).toContainText('Сначала отличи ссору от насилия');
+  await expect(essence).toContainText('В чужой зависимости и чужом насилии твоей вины нет');
+  await expect(
+    essence.locator('strong', { hasText: 'Твою будущую семью строишь ты' }),
+  ).toBeVisible();
+  await expect(essence.getByRole('link', { name: '«Помощь»' })).toBeVisible();
+  await essence.getByRole('link', { name: 'день 5' }).click();
+  await expect(page).toHaveURL(new RegExp(`${BASE}/day/5/$`));
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Когда в семье беда');
+  await expect(
+    page
+      .getByRole('main')
+      .getByRole('link', { name: /Помощь|службы/ })
+      .first(),
+  ).toBeVisible();
 });
 
 test('день 3 называет предание преданием и ведёт от тревожных признаков к помощи', async ({

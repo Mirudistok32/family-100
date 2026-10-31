@@ -1,7 +1,9 @@
 ---
 import DayPager from '@/components/DayPager.astro';
+import DayUnderReview from '@/components/DayUnderReview.astro';
 import LessonView from '@/components/LessonView.astro';
 import { DAYS } from '@/data/days';
+import { daysAwaitingReview } from '@/domain/visibility';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { visibleLessons } from '@/lib/lessons';
 import { lessonHref } from '@/lib/urls';
@@ -9,7 +11,7 @@ import { lessonHref } from '@/lib/urls';
 export async function getStaticPaths() {
   const lessons = await visibleLessons();
   const days = [...new Set(lessons.map((lesson) => lesson.data.day))];
-  return days.map((day) => ({
+  return [...days, ...daysAwaitingReview(DAYS, days)].map((day) => ({
     params: { day: String(day) },
     props: {
       day,
@@ -31,7 +33,9 @@ const title = meta?.title ?? `День ${day}`;
   heavy={meta?.heavy ?? false}
 >
   <div class="wrap">
-    {single ? (
+    {lessons.length === 0 ? (
+      <DayUnderReview day={day} title={title} />
+    ) : single ? (
       <LessonView lesson={single} label={`День ${day}`} />
     ) : (
       <div class="prose">
