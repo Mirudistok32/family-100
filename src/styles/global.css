@@ -530,6 +530,8 @@ main:focus {
 
 .file-field {
   display: grid;
+  /* Без minmax колонка растянется по ширине поля выбора файла, и на 320 px появится прокрутка вбок. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-2);
   font-weight: 600;
 }
@@ -601,6 +603,9 @@ main:focus {
 }
 .memo-sheet > :last-child {
   margin-bottom: 0;
+}
+.memo-sheet + p {
+  margin-top: var(--space-5);
 }
 
 .ethics-item {

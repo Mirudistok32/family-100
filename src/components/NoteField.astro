@@ -33,7 +33,12 @@ const hintId = `${fieldId}-hint`;
   {sensitive ? (
     <>
       <label class="note-field__keep">
-        <input type="checkbox" data-note-keep={id} />
+        <input
+          type="checkbox"
+          data-note-keep={id}
+          aria-label={`Сохранять эту запись: ${label}`}
+          aria-describedby={hintId}
+        />
         <span>Сохранять эту запись</span>
       </label>
       <p class="small muted" id={hintId}>
