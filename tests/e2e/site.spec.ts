@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 const BASE = '/family-100';
-const PAGES = [`${BASE}/`, `${BASE}/about/`, `${BASE}/day/1/`];
+const PAGES = [`${BASE}/`, `${BASE}/about/`, `${BASE}/day/1/`, `${BASE}/my-family/`];
 
 for (const path of PAGES) {
   test(`${path}: нет нарушений axe и прокрутки вбок`, async ({ page }) => {

@@ -1,0 +1,47 @@
+---
+import { MAX_NOTE_LENGTH } from '@/domain/notes';
+
+interface Props {
+  id: string;
+  label: string;
+  sensitive?: boolean;
+}
+
+const { id, label, sensitive = false } = Astro.props;
+const fieldId = `note-${id}`.replaceAll('/', '-');
+const hintId = `${fieldId}-hint`;
+---
+
+<div class="note-field">
+  <label class="note-field__label" for={fieldId}>
+    {label}
+  </label>
+  <textarea
+    id={fieldId}
+    class="note-field__input"
+    rows="4"
+    maxlength={MAX_NOTE_LENGTH}
+    autocomplete="off"
+    spellcheck={sensitive ? 'false' : undefined}
+    aria-describedby={hintId}
+    data-note-id={id}
+    data-sensitive={sensitive ? '' : undefined}
+  ></textarea>
+  {sensitive ? (
+    <>
+      <label class="note-field__keep">
+        <input type="checkbox" data-note-keep={id} />
+        <span>Сохранять эту запись</span>
+      </label>
+      <p class="small muted" id={hintId}>
+        Личная тема, поэтому по умолчанию запись не сохраняется: закроешь страницу, и текст
+        пропадёт. Если включить сохранение, данные лежат только в этом браузере. На общем устройстве
+        их может увидеть другой человек. Имена и подробности событий писать не нужно.
+      </p>
+    </>
+  ) : (
+    <p class="small muted" id={hintId}>
+      Сохраняется только в этом браузере.
+    </p>
+  )}
+</div>

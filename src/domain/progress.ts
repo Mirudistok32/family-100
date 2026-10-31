@@ -39,12 +39,15 @@ function parseLast(value: unknown): LastLesson | undefined {
 /** Читает сохранённую строку. Содержимое хранилища недоверенное: всё неверное отбрасывается. */
 export function parseProgress(raw: string | null): Progress {
   if (!raw) return emptyProgress();
-  let data: unknown;
   try {
-    data = JSON.parse(raw);
+    return normalizeProgress(JSON.parse(raw));
   } catch {
     return emptyProgress();
   }
+}
+
+/** Приводит недоверенное значение к формату. Общая часть для хранилища и файла копии. */
+export function normalizeProgress(data: unknown): Progress {
   if (typeof data !== 'object' || data === null) return emptyProgress();
   const { schemaVersion, checked, last } = data as Record<string, unknown>;
   if (schemaVersion !== 1) return emptyProgress();

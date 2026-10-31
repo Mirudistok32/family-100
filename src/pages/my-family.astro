@@ -1,0 +1,123 @@
+---
+import NoteField from '@/components/NoteField.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { visibleLessons } from '@/lib/lessons';
+import { lessonHref } from '@/lib/urls';
+
+const lessons = (await visibleLessons()).filter((lesson) => lesson.data.task.fields.length > 0);
+---
+
+<BaseLayout
+  title="Мои записи"
+  description="Твои записи по заданиям курса, копия данных и удаление. Всё хранится только в этом браузере."
+>
+  <div class="wrap">
+    <div class="prose">
+      <p class="hand">только для тебя</p>
+      <h1>Мои записи</h1>
+
+      <aside class="callout callout--calm" aria-label="Где лежат данные">
+        <p>
+          Записи и отметки лежат только в этом браузере на этом устройстве. Никуда они не
+          отправляются: на сайте нет ни аккаунтов, ни сервера для них. Если браузер очистят, вернуть
+          записи можно только из копии, поэтому ниже есть кнопка «Скачать копию».
+        </p>
+        <p>На общем устройстве записи может увидеть другой человек.</p>
+      </aside>
+
+      <p class="callout" data-js-off>
+        Без JavaScript записи не сохраняются. Прочитать задания можно, а копия и удаление не
+        работают.
+      </p>
+
+      <p class="save-problem" data-notes-problem role="alert" hidden>
+        Браузер не даёт сохранить запись. Пока страница открыта, она видна в поле, но после закрытия
+        пропадёт.
+      </p>
+
+      <h2>Задания по дням</h2>
+      {lessons.map(({ data }) => (
+        <section class="note-group" aria-labelledby={`notes-${data.task.id}`}>
+          <h3 id={`notes-${data.task.id}`}>
+            <a href={lessonHref(data.day, data.part)}>
+              День {data.day}. {data.title}
+            </a>
+          </h3>
+          <p>{data.task.text}</p>
+          {data.task.fields.map((field) => (
+            <NoteField id={field.id} label={field.label} sensitive={field.sensitive} />
+          ))}
+        </section>
+      ))}
+
+      <div data-needs-js hidden>
+        <h2 id="backup">Копия данных</h2>
+        <p>
+          Копия — это файл JSON с отметками и сохранёнными записями. С ней можно перенести данные на
+          другое устройство или вернуть их после очистки браузера. Записи в файле лежат открытым
+          текстом, поэтому храни его там, где не увидят другие.
+        </p>
+        <p>
+          <button class="btn" type="button" data-export>
+            Скачать копию
+          </button>
+        </p>
+
+        <h3>Восстановить из копии</h3>
+        <p>Сначала покажем, что в файле. Данные заменятся только после подтверждения.</p>
+        <p>
+          <label class="file-field">
+            <span>Файл копии</span>
+            <input type="file" accept=".json,application/json" data-import />
+          </label>
+        </p>
+
+        <section class="callout" data-import-preview aria-labelledby="import-title" hidden>
+          <h3 id="import-title">Что в файле</h3>
+          <ul data-import-facts></ul>
+          <p>Отметки и записи в этом браузере заменятся данными из файла.</p>
+          <p class="button-row">
+            <button class="btn" type="button" data-import-apply>
+              Заменить мои данные
+            </button>
+            <button class="btn btn--ghost" type="button" data-import-cancel>
+              Отмена
+            </button>
+          </p>
+        </section>
+
+        <h2 id="erase">Стереть всё</h2>
+        <p>
+          Удалит все отметки и записи из этого браузера. Вернуть их можно будет только из копии,
+          если она есть.
+        </p>
+        <p>
+          <button class="btn btn--ghost" type="button" data-erase>
+            Стереть всё
+          </button>
+        </p>
+
+        <p class="data-status" data-data-status role="status"></p>
+      </div>
+    </div>
+  </div>
+
+  <dialog class="dialog" data-erase-dialog aria-labelledby="erase-title">
+    <h2 id="erase-title">Стереть все записи и отметки?</h2>
+    <p>
+      Всё удалится из этого браузера. Отменить это нельзя, вернуть данные можно только из копии.
+    </p>
+    <p class="button-row">
+      <button class="btn btn--ghost" type="button" data-erase-cancel>
+        Отмена
+      </button>
+      <button class="btn" type="button" data-erase-confirm>
+        Да, стереть
+      </button>
+    </p>
+  </dialog>
+</BaseLayout>
+
+<script>
+  import '@/client/my-family';
+</script>

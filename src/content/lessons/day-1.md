@@ -17,6 +17,9 @@ task:
   fields:
     - id: d1-task-circle
       label: Заглушка поля
+    - id: d1-task-hard
+      label: Заглушка чувствительного поля
+      sensitive: true
 memo: what-family-gives
 sources:
   - title: Заглушка источника

@@ -420,3 +420,95 @@ main:focus {
   background: var(--danger-soft);
   border-inline-start: 4px solid var(--danger);
 }
+
+.note-group {
+  margin-block: var(--space-6);
+}
+.note-field {
+  margin-block: var(--space-5);
+}
+.note-field__label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-weight: 600;
+}
+.note-field__input {
+  display: block;
+  width: 100%;
+  min-height: 7rem;
+  padding: var(--space-3);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+}
+.note-field__keep {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  min-height: var(--target);
+  margin-top: var(--space-2);
+  cursor: pointer;
+}
+.note-field__keep input {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.note-field p {
+  margin: var(--space-2) 0 0;
+}
+
+.file-field {
+  display: grid;
+  gap: var(--space-2);
+  font-weight: 600;
+}
+.file-field input {
+  min-height: var(--target);
+  max-width: 100%;
+  font: inherit;
+  font-weight: 400;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.data-status:empty {
+  display: none;
+}
+.data-status {
+  padding: var(--space-3) var(--space-4);
+  background: var(--green-soft);
+  border-inline-start: 4px solid var(--green);
+}
+.data-status--problem {
+  background: var(--danger-soft);
+  border-color: var(--danger);
+}
+
+.dialog {
+  width: min(100% - 2 * var(--gutter), var(--measure));
+  padding: var(--space-5);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  color: var(--ink);
+}
+.dialog::backdrop {
+  background: rgb(0 0 0 / 0.55);
+}
+.dialog h2 {
+  margin-top: 0;
+  font-size: var(--text-h3);
+}
+.dialog > :last-child {
+  margin-bottom: 0;
+}

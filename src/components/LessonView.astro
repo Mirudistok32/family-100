@@ -1,7 +1,9 @@
 ---
 import { getEntry, render } from 'astro:content';
 
+import NoteField from '@/components/NoteField.astro';
 import type { Lesson } from '@/lib/lessons';
+import { href } from '@/lib/urls';
 
 interface Props {
   lesson: Lesson;
@@ -33,6 +35,23 @@ const Memo = memo ? (await render(memo)).Content : undefined;
   <section class="block block--task" aria-labelledby={`${data.task.id}-title`}>
     <h2 id={`${data.task.id}-title`}>Задание</h2>
     <p>{data.task.text}</p>
+    {data.task.fields.map((field) => (
+      <NoteField id={field.id} label={field.label} sensitive={field.sensitive} />
+    ))}
+    {data.task.fields.length > 0 && (
+      <>
+        <p class="save-problem" data-notes-problem role="alert" hidden>
+          Браузер не даёт сохранить запись. Пока страница открыта, она видна в поле, но после
+          закрытия пропадёт.
+        </p>
+        <p class="callout" data-js-off>
+          Без JavaScript записи не сохраняются: текст пропадёт, когда страница закроется.
+        </p>
+        <p class="small muted">
+          Все записи собраны на странице <a href={href('/my-family/')}>«Мои записи»</a>.
+        </p>
+      </>
+    )}
     <slot name="task" />
   </section>
 
@@ -102,5 +121,6 @@ const Memo = memo ? (await render(memo)).Content : undefined;
 </article>
 
 <script>
+  import '@/client/notes';
   import '@/client/progress';
 </script>
