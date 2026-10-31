@@ -1,6 +1,7 @@
 ---
 import { getEntry, render } from 'astro:content';
 
+import HeavyNotice from '@/components/HeavyNotice.astro';
 import NoteField from '@/components/NoteField.astro';
 import type { Lesson } from '@/lib/lessons';
 import { href } from '@/lib/urls';
@@ -23,6 +24,7 @@ const Memo = memo ? (await render(memo)).Content : undefined;
     {label} · {data.minutes} минут
   </p>
   <h1>{data.title}</h1>
+  {data.heavy && <HeavyNotice topic={data.title.toLowerCase()} />}
   <p class="lesson__goal">{data.goal}</p>
 
   <aside class="callout" aria-label="Вопрос дня">

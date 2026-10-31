@@ -5,6 +5,7 @@ import '@/styles/global.css';
 
 import literataCyrillic from '@fontsource-variable/literata/files/literata-cyrillic-wght-normal.woff2?url';
 
+import SafetyBar from '@/components/SafetyBar.astro';
 import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
 import { SITE_TITLE } from '@/data/days';
@@ -16,9 +17,11 @@ interface Props {
   description: string;
   /** Данные schema.org для этой страницы. */
   jsonLd?: Record<string, unknown>;
+  /** Тяжёлая страница: вверху ссылка на помощь и кнопка «Быстрый выход». */
+  heavy?: boolean;
 }
 
-const { title, description, jsonLd } = Astro.props;
+const { title, description, jsonLd, heavy = false } = Astro.props;
 const fullTitle = title ? `${title} · ${SITE_TITLE}` : SITE_TITLE;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(href('/og.png'), Astro.site);
@@ -51,6 +54,7 @@ const jsonLdText = jsonLd ? JSON.stringify(jsonLd).replaceAll('<', '\\u003c') : 
     {jsonLdText && <script is:inline type="application/ld+json" set:html={jsonLdText} />}
   </head>
   <body>
+    {heavy && <SafetyBar />}
     <SiteHeader />
     <main id="content" tabindex="-1">
       <slot />

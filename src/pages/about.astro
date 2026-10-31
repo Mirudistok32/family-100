@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { href } from '@/lib/urls';
 ---
 
 <BaseLayout
@@ -50,7 +51,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       <h2>Чем курс не является</h2>
       <p>
         Курс не заменяет врача, психолога, полицию или юриста. Если дома опасно, сначала нужна
-        безопасность и живой человек, который поможет.
+        безопасность и живой человек, который поможет. Контакты есть на странице{' '}
+        <a href={href('/help/')}>«Помощь»</a>.
       </p>
     </div>
   </div>

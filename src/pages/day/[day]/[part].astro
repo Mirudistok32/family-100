@@ -26,7 +26,11 @@ const previous = siblings[index - 1];
 const next = siblings[index + 1];
 ---
 
-<BaseLayout title={`День ${day}. ${lesson.data.title}`} description={lesson.data.goal}>
+<BaseLayout
+  title={`День ${day}. ${lesson.data.title}`}
+  description={lesson.data.goal}
+  heavy={lesson.data.heavy}
+>
   <div class="wrap">
     <p>
       <a href={lessonHref(day)}>← Все части дня {day}</a>

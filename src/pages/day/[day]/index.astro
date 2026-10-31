@@ -25,7 +25,11 @@ const single = lessons.length === 1 && !lessons[0]?.data.part ? lessons[0] : und
 const title = meta?.title ?? `День ${day}`;
 ---
 
-<BaseLayout title={`День ${day}. ${title}`} description={meta?.summary ?? title}>
+<BaseLayout
+  title={`День ${day}. ${title}`}
+  description={meta?.summary ?? title}
+  heavy={meta?.heavy ?? false}
+>
   <div class="wrap">
     {single ? (
       <LessonView lesson={single} label={`День ${day}`} />
