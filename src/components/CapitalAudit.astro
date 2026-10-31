@@ -1,0 +1,91 @@
+---
+import {
+  ANSWER_OPTIONS,
+  AUDIENCE_QUESTION,
+  AUDIENCE_TITLES,
+  AUDIT_ALL_STRONG,
+  AUDIT_STATEMENTS,
+  AUDIT_STEPS,
+  CAPITAL_TITLES,
+} from '@/data/capital-audit';
+import { AUDIENCES, CAPITALS } from '@/domain/capital-audit';
+---
+
+<div class="audit" data-audit>
+  <p class="small muted">
+    Суммы и имена аудит не спрашивает. Ответы лежат только в этом браузере и попадают в твою копию
+    данных. На общем устройстве их может увидеть другой человек.
+  </p>
+  <p class="callout" data-js-off>
+    Без JavaScript результат не считается и ответы не сохраняются. Можно просто пройти по вопросам:
+    где меньше всего «да», там и стоит начать.
+  </p>
+  <form class="audit__form" data-audit-form autocomplete="off">
+    <fieldset class="situation__group">
+      <legend>{AUDIENCE_QUESTION}</legend>
+      {AUDIENCES.map((audience) => (
+        <label class="situation__option">
+          <input type="radio" name="audience" value={audience} />
+          <span>{AUDIENCE_TITLES[audience]}</span>
+        </label>
+      ))}
+    </fieldset>
+    {AUDIENCES.map((audience) => (
+      <div data-audit-set={audience}>
+        <h3>{AUDIENCE_TITLES[audience]}</h3>
+        {CAPITALS.map((capital) => (
+          <>
+            <h4>{CAPITAL_TITLES[capital]}</h4>
+            {AUDIT_STATEMENTS.filter(
+              (item) => item.audience === audience && item.capital === capital,
+            ).map((item) => (
+              <fieldset class="situation__group audit__question">
+                <legend>{item.text}</legend>
+                <div class="audit__options">
+                  {ANSWER_OPTIONS.map((option) => (
+                    <label class="situation__option">
+                      <input type="radio" name={item.id} value={option.value} />
+                      <span>{option.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            ))}
+          </>
+        ))}
+      </div>
+    ))}
+    <button class="btn btn--ghost" type="reset">
+      Очистить ответы
+    </button>
+  </form>
+  <p class="situation__status" role="status" data-audit-status></p>
+  <section class="callout callout--calm" data-audit-result aria-labelledby="audit-steps-title">
+    <div data-audit-summary hidden>
+      <h3>Что получилось</h3>
+      <p class="small">Это карта, а не оценка. Она может измениться, и никто её не проверяет.</p>
+      <ul class="audit__scores">
+        {CAPITALS.map((capital) => (
+          <li data-audit-score={capital}>
+            <span id={`audit-score-${capital}`}>{CAPITAL_TITLES[capital]}</span>
+            <meter aria-labelledby={`audit-score-${capital}`} min="0" max="6" value="0"></meter>
+            <span class="small" data-audit-value></span>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <h3 id="audit-steps-title">С чего начать</h3>
+    {AUDIENCES.flatMap((audience) =>
+      CAPITALS.map((capital) => (
+        <p data-audit-step={capital} data-audit-step-for={audience}>
+          {AUDIT_STEPS[audience][capital]}
+        </p>
+      )),
+    )}
+    <p data-audit-step="all-strong">{AUDIT_ALL_STRONG}</p>
+  </section>
+</div>
+
+<script>
+  import '@/client/capital-audit';
+</script>

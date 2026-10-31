@@ -48,6 +48,16 @@ export function reloadNotes(): void {
   renderNotes();
 }
 
+/** Запись инструмента на странице. Идёт через ту же копию записей, иначе поля затёрли бы её своим сохранением. */
+export function readToolNote(id: string): string {
+  return getNote(notes, id);
+}
+
+export function writeToolNote(id: string, text: string): void {
+  notes = setNote(notes, id, text);
+  save();
+}
+
 /** Очищает поля на странице, в том числе несохраняемый ввод. Для «стереть всё». */
 export function clearNoteFields(): void {
   for (const field of fields()) field.value = '';

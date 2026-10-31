@@ -1,6 +1,7 @@
 ---
 import { getEntry, render } from 'astro:content';
 
+import CapitalAudit from '@/components/CapitalAudit.astro';
 import HeavyNotice from '@/components/HeavyNotice.astro';
 import MySituation from '@/components/MySituation.astro';
 import NoteField from '@/components/NoteField.astro';
@@ -39,6 +40,7 @@ const Memo = memo ? (await render(memo)).Content : undefined;
     <h2 id={`${data.task.id}-title`}>Задание</h2>
     <p>{data.task.text}</p>
     {data.task.tool === 'my-situation' && <MySituation />}
+    {data.task.tool === 'capital-audit' && <CapitalAudit />}
     {data.task.fields.map((field) => (
       <NoteField id={field.id} label={field.label} sensitive={field.sensitive} />
     ))}

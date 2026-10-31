@@ -501,6 +501,33 @@ main:focus {
   display: none;
 }
 
+.audit {
+  margin-block: var(--space-5);
+}
+.audit__question legend {
+  font-weight: 400;
+}
+.audit__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-5);
+}
+.audit__scores {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+.audit__scores li {
+  display: grid;
+  gap: var(--space-2);
+}
+.audit__scores meter {
+  width: 100%;
+  height: 0.75rem;
+}
+
 .file-field {
   display: grid;
   gap: var(--space-2);
