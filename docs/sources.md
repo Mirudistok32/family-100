@@ -99,4 +99,8 @@
 
 ## Изображения и шрифты
 
-Заполняется вместе с пунктом 1.1: файл, автор, лицензия.
+| Файл | Автор | Лицензия |
+| --- | --- | --- |
+| Literata, npm `@fontsource-variable/literata` | TypeTogether для Google | OFL 1.1 |
+| Caveat, npm `@fontsource-variable/caveat` | Impallari Type | OFL 1.1 |
+| `public/favicon.svg` | Сделан для проекта | Свой |

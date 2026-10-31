@@ -5,5 +5,6 @@ package-lock.json
 test-results
 playwright-report
 .lighthouse
+.shots
 # Markdown с таблицами: Prettier выравнивает таблицу по самой длинной ячейке и переписывает её целиком
 *.md

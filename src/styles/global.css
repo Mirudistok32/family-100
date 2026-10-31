@@ -1,0 +1,209 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: var(--space-6);
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading);
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--space-4);
+  font-weight: 600;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+h1 {
+  font-size: var(--text-h1);
+  letter-spacing: -0.01em;
+}
+h2 {
+  margin-top: var(--space-7);
+  font-size: var(--text-h2);
+}
+h3 {
+  margin-top: var(--space-6);
+  font-size: var(--text-h3);
+}
+
+p,
+ul,
+ol {
+  margin: 0 0 var(--space-4);
+}
+ul,
+ol {
+  padding-inline-start: var(--space-5);
+}
+li + li {
+  margin-top: var(--space-2);
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+a:hover {
+  text-decoration-thickness: 0.16em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+small,
+.small {
+  font-size: var(--text-small);
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+main {
+  padding-block: var(--space-6) var(--space-8);
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--wide);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.prose {
+  max-width: var(--measure);
+}
+
+/* Запись от руки: только короткие подписи, длинный текст ею не набираем. */
+.hand {
+  font-family: var(--font-hand);
+  font-size: var(--text-hand);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Фотокарточка из альбома: белая рамка, уголки, лёгкая тень. */
+.photo-card {
+  position: relative;
+  margin: var(--space-5) 0;
+  padding: var(--space-5);
+  background: var(--photo-edge);
+  border: 1px solid var(--rule-faint);
+  box-shadow: 0 2px 10px var(--shadow);
+}
+.photo-card > :last-child {
+  margin-bottom: 0;
+}
+.photo-card::before,
+.photo-card::after {
+  content: '';
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--rule);
+  pointer-events: none;
+}
+.photo-card::before {
+  top: var(--space-2);
+  left: var(--space-2);
+  border-right: 0;
+  border-bottom: 0;
+}
+.photo-card::after {
+  right: var(--space-2);
+  bottom: var(--space-2);
+  border-left: 0;
+  border-top: 0;
+}
+
+/* Записка на полях: для героев и подсказок. */
+.note {
+  margin: var(--space-5) 0;
+  padding: var(--space-4) var(--space-5);
+  background: var(--note);
+  border-inline-start: 4px solid var(--rule);
+}
+.note > :last-child {
+  margin-bottom: 0;
+}
+
+.callout {
+  margin: var(--space-5) 0;
+  padding: var(--space-4) var(--space-5);
+  background: var(--accent-soft);
+  border-inline-start: 4px solid var(--accent);
+}
+.callout > :last-child {
+  margin-bottom: 0;
+}
+.callout--danger {
+  background: var(--danger-soft);
+  border-color: var(--danger);
+}
+.callout--calm {
+  background: var(--green-soft);
+  border-color: var(--green);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--target);
+  padding: var(--space-2) var(--space-5);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover {
+  filter: brightness(1.1);
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--accent);
+}
+.btn--ghost:hover {
+  background: var(--accent-soft);
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

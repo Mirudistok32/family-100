@@ -12,6 +12,7 @@ export default defineConfig([
     'test-results/**',
     'playwright-report/**',
     '.lighthouse/**',
+    '.shots/**',
   ]),
   js.configs.recommended,
   ...tseslint.configs.recommended,
