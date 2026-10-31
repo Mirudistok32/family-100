@@ -9,6 +9,8 @@ export default defineConfig({
   testDir: './tests/e2e',
   timeout: 30_000,
   fullyParallel: true,
+  // На этой машине параллельно идут другие сессии: при 4 воркерах Chrome не успевал создать контекст.
+  workers: 2,
   forbidOnly: true,
   reporter: 'list',
   use: {
