@@ -16,7 +16,7 @@ const memo = await getEntry(data.memo);
 const Memo = memo ? (await render(memo)).Content : undefined;
 ---
 
-<article class="lesson prose" data-lesson-id={data.id}>
+<article class="lesson prose" data-lesson-id={data.id} data-lesson-title={data.title}>
   <p class="hand">
     {label} · {data.minutes} минут
   </p>
@@ -46,7 +46,12 @@ const Memo = memo ? (await render(memo)).Content : undefined;
         <h3>Мне 14–17</h3>
         <ul class="checklist" data-checklist="teen">
           {data.teen.map((item) => (
-            <li data-item-id={item.id}>{item.text}</li>
+            <li>
+              <label>
+                <input type="checkbox" data-item-id={item.id} />
+                <span>{item.text}</span>
+              </label>
+            </li>
           ))}
         </ul>
       </div>
@@ -54,11 +59,20 @@ const Memo = memo ? (await render(memo)).Content : undefined;
         <h3>Мы уже пара</h3>
         <ul class="checklist" data-checklist="couple">
           {data.couple.map((item) => (
-            <li data-item-id={item.id}>{item.text}</li>
+            <li>
+              <label>
+                <input type="checkbox" data-item-id={item.id} />
+                <span>{item.text}</span>
+              </label>
+            </li>
           ))}
         </ul>
       </div>
     </div>
+    <p class="save-problem" data-save-problem role="alert" hidden>
+      Браузер не даёт сохранить отметку. Пока страница открыта, она действует, но после закрытия
+      пропадёт.
+    </p>
   </section>
 
   {memo && Memo && (
@@ -86,3 +100,7 @@ const Memo = memo ? (await render(memo)).Content : undefined;
     </ul>
   </section>
 </article>
+
+<script>
+  import '@/client/progress';
+</script>

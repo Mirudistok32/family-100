@@ -385,3 +385,38 @@ main:focus {
   max-width: var(--measure);
   margin-block: var(--space-6);
 }
+
+[hidden] {
+  display: none !important;
+}
+
+.checklist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.checklist li + li {
+  margin-top: var(--space-1);
+}
+.checklist label {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  min-height: var(--target);
+  padding-block: var(--space-2);
+  cursor: pointer;
+}
+.checklist input {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0.15rem 0 0;
+  accent-color: var(--accent);
+}
+
+.save-problem {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--danger-soft);
+  border-inline-start: 4px solid var(--danger);
+}

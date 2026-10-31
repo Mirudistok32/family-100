@@ -6,6 +6,12 @@ import { href, lessonHref } from '@/lib/urls';
 
 const lessons = await visibleLessons();
 const available = new Set(lessons.map((lesson) => lesson.data.day));
+const itemIds = (day: number) =>
+  lessons
+    .filter((lesson) => lesson.data.day === day)
+    .flatMap((lesson) => [...lesson.data.teen, ...lesson.data.couple])
+    .map((item) => item.id)
+    .join(' ');
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 
 const jsonLd = {
@@ -39,6 +45,9 @@ const jsonLd = {
         хорошего примера дома. Твою будущую семью строишь ты.
       </p>
       <p>На один день уходит 20–30 минут. Порядок лучше сохранить, но ничего не заперто.</p>
+      <p class="callout resume" data-resume hidden>
+        Продолжить там, где остановились: <a href={href('/')}>урок</a>
+      </p>
     </div>
 
     <h2 id="days">Семь дней</h2>
@@ -52,6 +61,9 @@ const jsonLd = {
           <p>{summary}</p>
           {heavy && <p class="small muted">Тяжёлая тема: части можно проходить по отдельности.</p>}
           {!available.has(day) && <p class="small muted">Пока в работе.</p>}
+          {available.has(day) && (
+            <p class="small muted" data-progress-items={itemIds(day)} hidden />
+          )}
         </li>
       ))}
     </ol>
@@ -70,3 +82,7 @@ const jsonLd = {
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  import '@/client/progress';
+</script>
