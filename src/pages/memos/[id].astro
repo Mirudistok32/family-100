@@ -1,0 +1,37 @@
+---
+import MemoSheet from '@/components/MemoSheet.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { visibleMemos } from '@/lib/memos';
+import { href } from '@/lib/urls';
+
+export async function getStaticPaths() {
+  const memos = await visibleMemos();
+  return memos.map(({ memo, lesson }) => ({
+    params: { id: memo.data.id },
+    props: { memo, lesson },
+  }));
+}
+
+const { memo, lesson } = Astro.props;
+---
+
+<BaseLayout
+  title={`Памятка: ${memo.data.title}`}
+  description={`Памятка курса на один лист A4. День ${lesson.data.day}: ${lesson.data.title}.`}
+>
+  <div class="wrap">
+    <p class="no-print">
+      <a href={href('/memos/')}>← Все памятки</a>
+    </p>
+    <MemoSheet memo={memo} lesson={lesson} headingLevel={1} />
+    <p class="no-print" data-needs-js hidden>
+      <button class="btn" type="button" data-print>
+        Распечатать
+      </button>
+    </p>
+  </div>
+</BaseLayout>
+
+<script>
+  import '@/client/print';
+</script>

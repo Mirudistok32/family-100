@@ -99,6 +99,9 @@ const Memo = memo ? (await render(memo)).Content : undefined;
       <p class="hand">памятка</p>
       <h2 id={`memo-${memo.data.id}`}>{memo.data.title}</h2>
       <Memo />
+      <p class="no-print small">
+        <a href={href(`/memos/${memo.data.id}/`)}>Распечатать памятку</a>
+      </p>
     </section>
   )}
 

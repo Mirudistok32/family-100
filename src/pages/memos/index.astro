@@ -1,0 +1,37 @@
+---
+import MemoSheet from '@/components/MemoSheet.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { visibleMemos } from '@/lib/memos';
+
+const memos = await visibleMemos();
+---
+
+<BaseLayout
+  title="Памятки"
+  description="Все памятки курса на одном экране. Каждая помещается на лист A4, их удобно распечатать и держать под рукой."
+>
+  <div class="wrap">
+    <div class="prose no-print">
+      <p class="hand">на холодильник</p>
+      <h1>Памятки</h1>
+      <p>
+        Короткие листы по каждому дню. Каждая памятка помещается на одну страницу A4. Можно
+        распечатать все сразу или открыть один лист.
+      </p>
+      <p data-needs-js hidden>
+        <button class="btn" type="button" data-print>
+          Распечатать все
+        </button>
+      </p>
+    </div>
+    <div class="memo-sheets">
+      {memos.map(({ memo, lesson }) => (
+        <MemoSheet memo={memo} lesson={lesson} headingLevel={2} linkToSheet />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import '@/client/print';
+</script>

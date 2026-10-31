@@ -1,0 +1,37 @@
+---
+import { render } from 'astro:content';
+
+import { SITE_TITLE } from '@/data/days';
+import type { VisibleMemo } from '@/lib/memos';
+import { href, lessonHref } from '@/lib/urls';
+
+interface Props extends VisibleMemo {
+  /** Заголовок листа: h1 на странице памятки, h2 в общем списке. */
+  headingLevel: 1 | 2;
+  /** В общем списке есть ссылка на отдельный лист. */
+  linkToSheet?: boolean;
+}
+
+const { memo, lesson, headingLevel, linkToSheet = false } = Astro.props;
+const { Content } = await render(memo);
+const { day, part, title: lessonTitle } = lesson.data;
+const Heading = `h${headingLevel}` as 'h1' | 'h2';
+---
+
+<article class="memo-sheet" data-memo={memo.data.id}>
+  <p class="hand memo-sheet__label">памятка · день {day}</p>
+  <Heading class="memo-sheet__title">{memo.data.title}</Heading>
+  <Content />
+  <p class="memo-sheet__from">
+    Из курса «{SITE_TITLE}», день {day}: {lessonTitle}.
+  </p>
+  <p class="no-print small">
+    <a href={lessonHref(day, part)}>Открыть урок</a>
+    {linkToSheet && (
+      <>
+        {' · '}
+        <a href={href(`/memos/${memo.data.id}/`)}>Только этот лист</a>
+      </>
+    )}
+  </p>
+</article>

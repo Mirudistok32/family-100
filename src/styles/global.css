@@ -512,3 +512,101 @@ main:focus {
 .dialog > :last-child {
   margin-bottom: 0;
 }
+
+.memo-sheets {
+  display: grid;
+  gap: var(--space-6);
+  max-width: var(--measure);
+}
+.memo-sheet {
+  padding: var(--space-5);
+  background: var(--green-soft);
+  border-inline-start: 4px solid var(--green);
+}
+.memo-sheet__label {
+  margin-bottom: var(--space-1);
+}
+.memo-sheet__title {
+  margin-top: 0;
+}
+.memo-sheet__from {
+  margin-top: var(--space-5);
+  color: var(--ink-soft);
+  font-size: var(--text-small);
+}
+.memo-sheet > :last-child {
+  margin-bottom: 0;
+}
+
+/* Печать: белый лист, чёрный текст, без шапки и лишнего цвета. Одна памятка — один лист A4. */
+@page {
+  size: A4;
+  margin: 18mm 16mm;
+}
+
+@media print {
+  :root {
+    color-scheme: light;
+    --paper: #fff;
+    --paper-raised: #fff;
+    --photo-edge: #fff;
+    --note: #fff;
+    --ink: #000;
+    --ink-soft: #333;
+    --accent: #000;
+    --accent-ink: #fff;
+    --accent-soft: #fff;
+    --green: #555;
+    --green-soft: #fff;
+    --rule: #555;
+    --rule-faint: #999;
+    --danger: #000;
+    --danger-soft: #fff;
+    --shadow: transparent;
+    --text-base: 12pt;
+    --text-small: 10.5pt;
+    --text-hand: 15pt;
+    --text-h1: 20pt;
+    --text-h2: 20pt;
+    --text-h3: 13.5pt;
+    --leading: 1.42;
+  }
+
+  .site-header,
+  .site-footer,
+  .skip-link,
+  .day-pager,
+  .no-print {
+    display: none !important;
+  }
+
+  main {
+    padding: 0;
+  }
+  .wrap,
+  .prose,
+  .memo-sheets {
+    display: block;
+    max-width: none;
+    padding: 0;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .block--history,
+  .day-card,
+  .photo-card {
+    box-shadow: none;
+  }
+
+  .memo-sheet {
+    padding: 0;
+    border: 0;
+    break-inside: avoid;
+    break-after: page;
+  }
+  .memo-sheet:last-child {
+    break-after: auto;
+  }
+}
