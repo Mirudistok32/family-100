@@ -98,6 +98,22 @@ test('перед ссылкой, перенесённой на новую стр
   await expect(page.locator('footer')).toContainText('не отправляются. О курсе и приватности');
 });
 
+test('возрастной знак 16+ есть в подвале и объяснён на странице о курсе', async ({ page }) => {
+  for (const path of [`${BASE}/`, `${BASE}/day/1/`, `${BASE}/help/`]) {
+    await page.goto(path);
+    await expect(page.locator('footer')).toContainText('16+');
+  }
+
+  await page.locator('footer').getByRole('link', { name: 'если тебе меньше 16' }).click();
+  await expect(page).toHaveURL(new RegExp(`${BASE}/about/#age$`));
+
+  const heading = page.getByRole('heading', { level: 2, name: 'Почему на сайте знак 16+' });
+  await expect(heading).toBeInViewport();
+  const main = page.locator('main');
+  await expect(main).toContainText('вместе со взрослым, которому доверяешь');
+  await expect(main).toContainText('открыты в любом возрасте');
+});
+
 test('картинка для соцсетей на месте', async ({ request }) => {
   const image = await request.get(`${BASE}/og.png`);
   expect(image.ok()).toBe(true);
