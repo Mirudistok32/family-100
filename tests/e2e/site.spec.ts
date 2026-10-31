@@ -6,6 +6,7 @@ const PAGES = [
   `${BASE}/`,
   `${BASE}/about/`,
   `${BASE}/day/1/`,
+  `${BASE}/day/2/`,
   `${BASE}/my-family/`,
   `${BASE}/help/`,
 ];
@@ -106,4 +107,17 @@ test('внутренняя ссылка из текста урока ведёт 
   await page.goto(`${BASE}/day/1/`);
   await page.locator('.block--essence').getByRole('link', { name: '«Помощь»' }).click();
   await expect(page).toHaveURL(new RegExp(`${BASE}/help/$`));
+});
+
+test('день 2 прямо говорит ребёнку из любой семьи, что свою семью строит он', async ({ page }) => {
+  await page.goto(`${BASE}/day/2/`);
+  const essence = page.locator('.block--essence');
+  await expect(essence).toContainText('с тобой всё в порядке');
+  await expect(
+    essence.locator('strong', { hasText: 'твою будущую семью строишь ты' }),
+  ).toBeVisible();
+  for (const form of ['С одним родителем', 'С отчимом или мачехой', 'Приёмная', 'Без детей']) {
+    await expect(essence).toContainText(form);
+  }
+  await expect(page.getByRole('link', { name: 'Памятки' })).toBeVisible();
 });
