@@ -1,0 +1,75 @@
+---
+import {
+  AGE_OPTIONS,
+  AGE_QUESTION,
+  CLIMATE_OPTIONS,
+  CLIMATE_QUESTION,
+  SIGN_OPTIONS,
+  SIGNS_QUESTION,
+  SITUATION_CARDS,
+} from '@/data/my-situation';
+import { CARD_IDS } from '@/domain/situation';
+import { href } from '@/lib/urls';
+---
+
+<div class="situation">
+  <form class="situation__form" data-situation-form autocomplete="off" hidden>
+    <fieldset class="situation__group">
+      <legend>{AGE_QUESTION}</legend>
+      {AGE_OPTIONS.map((option) => (
+        <label class="situation__option">
+          <input type="radio" name="age" value={option.value} />
+          <span>{option.label}</span>
+        </label>
+      ))}
+    </fieldset>
+    <fieldset class="situation__group">
+      <legend>{CLIMATE_QUESTION}</legend>
+      {CLIMATE_OPTIONS.map((option) => (
+        <label class="situation__option">
+          <input type="radio" name="climate" value={option.value} />
+          <span>{option.label}</span>
+        </label>
+      ))}
+    </fieldset>
+    <fieldset class="situation__group" data-situation-signs hidden>
+      <legend>{SIGNS_QUESTION}</legend>
+      {SIGN_OPTIONS.map((option) => (
+        <label class="situation__option">
+          <input type="checkbox" name="signs" value={option.value} />
+          <span>{option.label}</span>
+        </label>
+      ))}
+    </fieldset>
+    <button class="btn btn--ghost" type="reset">
+      Очистить ответы
+    </button>
+  </form>
+  <p class="small muted" data-js-off>
+    Без JavaScript вопросы не работают, поэтому показаны все варианты. Выбери подходящий.
+  </p>
+  <p class="situation__status" role="status" data-situation-status></p>
+  {CARD_IDS.map((id) => {
+    const card = SITUATION_CARDS[id];
+    return (
+      <section
+        class:list={['callout', { 'callout--danger': card.danger }]}
+        data-situation-card={id}
+        aria-labelledby={`situation-${id}`}
+      >
+        <h3 id={`situation-${id}`}>{card.title}</h3>
+        {card.paragraphs.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </section>
+    );
+  })}
+  <p data-situation-footer>
+    Это не диагноз и не приговор. Решаешь ты, а живой специалист поможет лучше страницы: контакты
+    есть на странице <a href={href('/help/')}>«Помощь»</a>.
+  </p>
+</div>
+
+<script>
+  import '@/client/my-situation';
+</script>

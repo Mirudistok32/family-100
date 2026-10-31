@@ -12,6 +12,7 @@ const PAGES = [
   `${BASE}/day/5/`,
   `${BASE}/day/5/addiction/`,
   `${BASE}/day/5/abuse/`,
+  `${BASE}/day/5/distance/`,
   `${BASE}/my-family/`,
   `${BASE}/help/`,
 ];

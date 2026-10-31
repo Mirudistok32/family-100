@@ -33,6 +33,8 @@ const lessons = defineCollection({
     task: z.object({
       id: slug,
       text: z.string().min(1),
+      /** Инструмент задания. `my-situation` ничего не сохраняет. */
+      tool: z.enum(['my-situation']).optional(),
       fields: z
         .array(
           z.object({
