@@ -101,3 +101,9 @@ test('нет ошибок консоли на главной и уроке, CSP 
   await page.waitForLoadState('networkidle');
   expect(errors).toEqual([]);
 });
+
+test('внутренняя ссылка из текста урока ведёт на страницу в подпапке сайта', async ({ page }) => {
+  await page.goto(`${BASE}/day/1/`);
+  await page.locator('.block--essence').getByRole('link', { name: '«Помощь»' }).click();
+  await expect(page).toHaveURL(new RegExp(`${BASE}/help/$`));
+});
