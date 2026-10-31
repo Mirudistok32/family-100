@@ -10,6 +10,7 @@ const PAGES = [
   `${BASE}/day/3/`,
   `${BASE}/day/4/`,
   `${BASE}/day/5/`,
+  `${BASE}/day/5/addiction/`,
   `${BASE}/my-family/`,
   `${BASE}/help/`,
 ];
@@ -110,6 +111,29 @@ test('внутренняя ссылка из текста урока ведёт 
   await page.goto(`${BASE}/day/1/`);
   await page.locator('.block--essence').getByRole('link', { name: '«Помощь»' }).click();
   await expect(page).toHaveURL(new RegExp(`${BASE}/help/$`));
+});
+
+test('часть о зависимости: быстрый выход, помощь, чужая вина и шаги для школьника', async ({
+  page,
+}) => {
+  await page.goto(`${BASE}/day/5/addiction/`);
+  await expect(page.getByRole('link', { name: 'Быстрый выход' })).toBeVisible();
+  await expect(page.getByRole('complementary', { name: 'Предупреждение о теме' })).toBeVisible();
+  const essence = page.locator('.block--essence');
+  await expect(essence).toContainText('Если тебе 14–17');
+  await expect(essence).toContainText('Если тебе уже есть 18');
+  await expect(essence).toContainText('Это не диагноз');
+  await expect(essence).toContainText('Не отбирай, не выливай и не прячь');
+  await expect(page.getByRole('listitem').filter({ hasText: 'я не могу вылечить' })).toBeVisible();
+  await essence.getByRole('link', { name: '«Помощь»' }).last().click();
+  await expect(page).toHaveURL(new RegExp(`${BASE}/help/#help-addiction$`));
+});
+
+test('вход в день 5 предупреждает о теме и даёт выбрать часть', async ({ page }) => {
+  await page.goto(`${BASE}/day/5/`);
+  await expect(page.getByRole('link', { name: 'Быстрый выход' })).toBeVisible();
+  await expect(page.getByRole('complementary', { name: 'Предупреждение о теме' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Алкоголь и наркомания' })).toBeVisible();
 });
 
 test('день 4 отделяет ссору от насилия и ведёт к дню 5 и к помощи', async ({ page }) => {

@@ -1,6 +1,7 @@
 ---
 import DayPager from '@/components/DayPager.astro';
 import DayUnderReview from '@/components/DayUnderReview.astro';
+import HeavyNotice from '@/components/HeavyNotice.astro';
 import LessonView from '@/components/LessonView.astro';
 import { DAYS } from '@/data/days';
 import { daysAwaitingReview } from '@/domain/visibility';
@@ -42,6 +43,12 @@ const title = meta?.title ?? `День ${day}`;
         <p class="hand">День {day}</p>
         <h1>{title}</h1>
         <p>{meta?.summary}</p>
+        {meta?.heavy && (
+          <>
+            <HeavyNotice topic={meta.title.toLowerCase()} />
+            <p>Части можно проходить по отдельности и в любом порядке.</p>
+          </>
+        )}
         <ol class="part-list">
           {lessons.map((lesson) => (
             <li>
