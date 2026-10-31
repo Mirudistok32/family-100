@@ -1,0 +1,88 @@
+---
+import { getEntry, render } from 'astro:content';
+
+import type { Lesson } from '@/lib/lessons';
+
+interface Props {
+  lesson: Lesson;
+  /** Подпись над заголовком: «День 1» или «День 5, часть 2». */
+  label: string;
+}
+
+const { lesson, label } = Astro.props;
+const { data } = lesson;
+const { Content } = await render(lesson);
+const memo = await getEntry(data.memo);
+const Memo = memo ? (await render(memo)).Content : undefined;
+---
+
+<article class="lesson prose" data-lesson-id={data.id}>
+  <p class="hand">
+    {label} · {data.minutes} минут
+  </p>
+  <h1>{data.title}</h1>
+  <p class="lesson__goal">{data.goal}</p>
+
+  <aside class="callout" aria-label="Вопрос дня">
+    <p class="hand">вопрос, с которого начнём</p>
+    <p class="lesson__question">{data.question}</p>
+  </aside>
+
+  <Content />
+
+  <section class="block block--task" aria-labelledby={`${data.task.id}-title`}>
+    <h2 id={`${data.task.id}-title`}>Задание</h2>
+    <p>{data.task.text}</p>
+    <slot name="task" />
+  </section>
+
+  <section
+    class="block block--checklists"
+    aria-labelledby={`${data.id}-checklists`.replace('/', '-')}
+  >
+    <h2 id={`${data.id}-checklists`.replace('/', '-')}>Чек-листы</h2>
+    <div class="checklists">
+      <div>
+        <h3>Мне 14–17</h3>
+        <ul class="checklist" data-checklist="teen">
+          {data.teen.map((item) => (
+            <li data-item-id={item.id}>{item.text}</li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h3>Мы уже пара</h3>
+        <ul class="checklist" data-checklist="couple">
+          {data.couple.map((item) => (
+            <li data-item-id={item.id}>{item.text}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {memo && Memo && (
+    <section class="callout callout--calm block--memo" aria-labelledby={`memo-${memo.data.id}`}>
+      <p class="hand">памятка</p>
+      <h2 id={`memo-${memo.data.id}`}>{memo.data.title}</h2>
+      <Memo />
+    </section>
+  )}
+
+  <section class="block block--sources" aria-labelledby={`${data.id}-sources`.replace('/', '-')}>
+    <h2 id={`${data.id}-sources`.replace('/', '-')}>Источники</h2>
+    <ul>
+      {data.sources.map((source) => (
+        <li>
+          {source.url ? (
+            <a href={source.url} rel="noopener noreferrer">
+              {source.title}
+            </a>
+          ) : (
+            source.title
+          )}
+        </li>
+      ))}
+    </ul>
+  </section>
+</article>

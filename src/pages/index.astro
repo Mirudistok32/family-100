@@ -1,50 +1,71 @@
 ---
+import { DAYS, SITE_DESCRIPTION, SITE_TITLE } from '@/data/days';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { visibleLessons } from '@/lib/lessons';
+import { href, lessonHref } from '@/lib/urls';
+
+const lessons = await visibleLessons();
+const available = new Set(lessons.map((lesson) => lesson.data.day));
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  url: pageUrl,
+  inLanguage: 'ru',
+  isAccessibleForFree: true,
+  provider: { '@type': 'Organization', name: SITE_TITLE, url: pageUrl },
+  hasCourseInstance: {
+    '@type': 'CourseInstance',
+    courseMode: 'online',
+    courseWorkload: 'PT3H',
+  },
+};
 ---
 
-<BaseLayout
-  title="Семья на 100 лет"
-  description="Курс на 7 дней о том, зачем нужна семья и как её строить."
->
+<BaseLayout description={SITE_DESCRIPTION} jsonLd={jsonLd}>
   <div class="wrap">
     <div class="prose">
       <p class="hand">семь дней, один альбом</p>
-      <h1>Семья на 100 лет</h1>
-      <p>
-        Курс о том, зачем нужна семья, как её создать и как растить её силу. Страница пока в работе.
+      <h1>{SITE_TITLE}</h1>
+      <p class="lead">
+        Семь коротких дней о том, зачем нужна семья, как её создать и как растить её силу и силу
+        каждого в ней. С историей, живыми примерами, чек-листами и памятками.
       </p>
       <p>
-        <a class="btn" href="#sample">
-          Посмотреть образцы
-        </a>
+        Этот курс для тех, кто хочет построить крепкую семью, и особенно для тех, кто не видел
+        хорошего примера дома. Твою будущую семью строишь ты.
       </p>
+      <p>На один день уходит 20–30 минут. Порядок лучше сохранить, но ничего не заперто.</p>
+    </div>
 
-      <h2 id="sample">Образцы оформления</h2>
-      <div class="photo-card">
-        <p class="hand">история</p>
-        <h3>Фотокарточка</h3>
-        <p>Блок с реальной историей. У него белая рамка и уголки, как в семейном альбоме.</p>
-      </div>
-      <aside class="note">
-        <p class="hand">пример из жизни</p>
-        <p>Записка на полях. Здесь живут сквозные герои, и они придуманы.</p>
-      </aside>
-      <div class="callout">
-        <p>
-          Важная мысль дня. <a href="#sample">Ссылка внутри</a>.
-        </p>
-      </div>
-      <div class="callout callout--calm">
-        <p>Спокойный блок для памятки.</p>
-      </div>
-      <div class="callout callout--danger">
-        <p>Блок помощи на тяжёлых страницах.</p>
-      </div>
-      <p class="muted">Приглушённый текст для подписей и дат.</p>
+    <h2 id="days">Семь дней</h2>
+    <ol class="day-list">
+      {DAYS.map(({ day, title, summary, heavy }) => (
+        <li class="day-card" data-day={day}>
+          <p class="hand day-card__number">день {day}</p>
+          <h3 class="day-card__title">
+            {available.has(day) ? <a href={lessonHref(day)}>{title}</a> : title}
+          </h3>
+          <p>{summary}</p>
+          {heavy && <p class="small muted">Тяжёлая тема: части можно проходить по отдельности.</p>}
+          {!available.has(day) && <p class="small muted">Пока в работе.</p>}
+        </li>
+      ))}
+    </ol>
+
+    <div class="prose">
+      <h2>Что останется после курса</h2>
+      <ul>
+        <li>Чек-листы: «Мне 14–17» и «Мы уже пара».</li>
+        <li>Памятки, которые можно распечатать.</li>
+        <li>Своя семейная конституция: ценности, правила и то, что не повторяем.</li>
+      </ul>
       <p>
-        <a class="btn btn--ghost" href="#sample">
-          Вторичная кнопка
-        </a>
+        Курс строится на союзе мужчины и женщины и их детях. Это ценность автора. Подробнее —
+        <a href={href('/about/')}>на странице о курсе</a>.
       </p>
     </div>
   </div>

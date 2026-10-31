@@ -1,0 +1,51 @@
+---
+import DayPager from '@/components/DayPager.astro';
+import LessonView from '@/components/LessonView.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { visibleLessons } from '@/lib/lessons';
+import { lessonHref } from '@/lib/urls';
+
+export async function getStaticPaths() {
+  const lessons = await visibleLessons();
+  const available = [...new Set(lessons.map((lesson) => lesson.data.day))];
+  return lessons
+    .filter((lesson) => lesson.data.part)
+    .map((lesson) => {
+      const siblings = lessons.filter((other) => other.data.day === lesson.data.day);
+      return {
+        params: { day: String(lesson.data.day), part: String(lesson.data.part) },
+        props: { lesson, available, siblings },
+      };
+    });
+}
+
+const { lesson, available, siblings } = Astro.props;
+const { day, order } = lesson.data;
+const index = siblings.findIndex((other) => other.id === lesson.id);
+const previous = siblings[index - 1];
+const next = siblings[index + 1];
+---
+
+<BaseLayout title={`День ${day}. ${lesson.data.title}`} description={lesson.data.goal}>
+  <div class="wrap">
+    <p>
+      <a href={lessonHref(day)}>← Все части дня {day}</a>
+    </p>
+    <LessonView lesson={lesson} label={`День ${day}, часть ${order}`} />
+    <nav class="day-pager" aria-label="Соседние части">
+      {previous ? (
+        <a class="btn btn--ghost" href={lessonHref(day, previous.data.part)} rel="prev">
+          ← {previous.data.title}
+        </a>
+      ) : (
+        <span />
+      )}
+      {next && (
+        <a class="btn" href={lessonHref(day, next.data.part)} rel="next">
+          {next.data.title} →
+        </a>
+      )}
+    </nav>
+    <DayPager day={day} available={available} />
+  </div>
+</BaseLayout>

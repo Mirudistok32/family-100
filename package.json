@@ -19,21 +19,25 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run contrast && npm run check:content && npm run test",
-    "check:full": "npm run check && npm run build && npm run test:e2e",
+    "check:full": "npm run check && npm run build:drafts && npm run test:e2e",
     "plan": "node ../agent-base/skills/plan-status/plan.mjs",
     "lighthouse": "node scripts/lighthouse.mjs",
     "weight": "node scripts/weight.mjs",
     "contrast": "node scripts/contrast.mjs",
     "shots": "node scripts/shots.mjs",
-    "check:content": "node scripts/check-content.ts"
+    "check:content": "node scripts/check-content.ts",
+    "build:drafts": "npm run check:content && astro build --mode drafts",
+    "og": "node scripts/og.mjs"
   },
   "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.5",
     "@fontsource-variable/caveat": "^5.3.0",
     "@fontsource-variable/literata": "^5.3.0",
     "astro": "^7.4.4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@astrojs/sitemap": "^3.7.4",
     "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.64.1",
