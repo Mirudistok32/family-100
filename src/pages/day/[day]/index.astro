@@ -4,7 +4,7 @@ import DayUnderReview from '@/components/DayUnderReview.astro';
 import HeavyNotice from '@/components/HeavyNotice.astro';
 import LessonView from '@/components/LessonView.astro';
 import { DAYS } from '@/data/days';
-import { daysAwaitingReview } from '@/domain/visibility';
+import { daysWithPages } from '@/domain/visibility';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { visibleLessons } from '@/lib/lessons';
 import { lessonHref } from '@/lib/urls';
@@ -12,11 +12,12 @@ import { lessonHref } from '@/lib/urls';
 export async function getStaticPaths() {
   const lessons = await visibleLessons();
   const days = [...new Set(lessons.map((lesson) => lesson.data.day))];
-  return [...days, ...daysAwaitingReview(DAYS, days)].map((day) => ({
+  const withPages = daysWithPages(DAYS, days);
+  return withPages.map((day) => ({
     params: { day: String(day) },
     props: {
       day,
-      available: days,
+      available: withPages,
       lessons: lessons.filter((lesson) => lesson.data.day === day),
     },
   }));

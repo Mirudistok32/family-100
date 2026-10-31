@@ -16,3 +16,16 @@ export function daysAwaitingReview(
 ): number[] {
   return days.filter(({ day, heavy }) => heavy && !published.includes(day)).map(({ day }) => day);
 }
+
+/**
+ * Дни, у которых есть страница: опубликованные и ожидающие проверки. По ним ходит пейджер, иначе скрытый день 5
+ * разрывал бы цепочку и со дня 4 нельзя было бы перейти дальше.
+ */
+export function daysWithPages(
+  days: readonly { day: number; heavy?: boolean }[],
+  published: readonly number[],
+): number[] {
+  return [...new Set([...published, ...daysAwaitingReview(days, published)])].toSorted(
+    (a, b) => a - b,
+  );
+}
