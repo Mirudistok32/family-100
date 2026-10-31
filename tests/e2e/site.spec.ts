@@ -7,6 +7,7 @@ const PAGES = [
   `${BASE}/about/`,
   `${BASE}/day/1/`,
   `${BASE}/day/2/`,
+  `${BASE}/day/3/`,
   `${BASE}/my-family/`,
   `${BASE}/help/`,
 ];
@@ -106,6 +107,21 @@ test('нет ошибок консоли на главной и уроке, CSP 
 test('внутренняя ссылка из текста урока ведёт на страницу в подпапке сайта', async ({ page }) => {
   await page.goto(`${BASE}/day/1/`);
   await page.locator('.block--essence').getByRole('link', { name: '«Помощь»' }).click();
+  await expect(page).toHaveURL(new RegExp(`${BASE}/help/$`));
+});
+
+test('день 3 называет предание преданием и ведёт от тревожных признаков к помощи', async ({
+  page,
+}) => {
+  await page.goto(`${BASE}/day/3/`);
+  await expect(page.getByText('предание, а не биография')).toBeVisible();
+  const essence = page.locator('.block--essence');
+  await expect(essence).toContainText('Тревожные признаки');
+  await expect(essence).toContainText('В чужой зависимости и чужом насилии твоей вины нет');
+  await expect(
+    essence.locator('strong', { hasText: 'твою будущую семью строишь ты' }),
+  ).toBeVisible();
+  await essence.getByRole('link', { name: '«Помощь»' }).click();
   await expect(page).toHaveURL(new RegExp(`${BASE}/help/$`));
 });
 
