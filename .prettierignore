@@ -1,0 +1,9 @@
+dist
+.astro
+node_modules
+package-lock.json
+test-results
+playwright-report
+.lighthouse
+# Markdown с таблицами: Prettier выравнивает таблицу по самой длинной ячейке и переписывает её целиком
+*.md

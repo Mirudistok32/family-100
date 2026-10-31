@@ -1,0 +1,9 @@
+node_modules
+dist
+.astro
+*.tsbuildinfo
+.DS_Store
+test-results
+playwright-report
+.plan-timer.json
+.lighthouse
