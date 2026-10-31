@@ -62,6 +62,12 @@ const Memo = memo ? (await render(memo)).Content : undefined;
     aria-labelledby={`${data.id}-checklists`.replace('/', '-')}
   >
     <h2 id={`${data.id}-checklists`.replace('/', '-')}>Чек-листы</h2>
+    {data.heavy && (
+      <p class="small muted">
+        Отметки хранятся только в этом браузере. На общем устройстве их может увидеть другой
+        человек, поэтому отмечать необязательно.
+      </p>
+    )}
     <div class="checklists">
       <div>
         <h3>Мне 14–17</h3>
