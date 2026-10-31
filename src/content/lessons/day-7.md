@@ -42,6 +42,7 @@ task:
       label: "Миссия: какие мы и зачем мы вместе? Одна-две фразы."
     - id: d7-task-tradition
       label: Какую традицию заведу или сохраню?
+thinkers: [Ганс Йонас]
 memo: hundred-years
 sources:
   - title: "Архив Ротшильдов: история дела"

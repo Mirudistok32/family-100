@@ -23,7 +23,10 @@ const BODY = [
   '## Суть',
   'Текст.',
   '## Вопрос этики',
-  'Текст.',
+  '**Вопрос?**',
+  'Об этом думал Аристотель.',
+  '- **Да.** Потому что.',
+  '- **Нет.** Потому что.',
 ].join('\n');
 
 const lesson = (over: Partial<LessonInput['data']> = {}, body = BODY): LessonInput => ({
@@ -39,6 +42,7 @@ const lesson = (over: Partial<LessonInput['data']> = {}, body = BODY): LessonInp
     teen: [{ id: 't-1', text: 'Пункт' }],
     couple: [{ id: 'c-1', text: 'Пункт' }],
     task: { id: 'task-1', text: 'Задание', fields: [{ id: 'f-1', label: 'Поле' }] },
+    thinkers: ['Аристотель'],
     memo: 'memo-1',
     sources: [{ title: 'Книга', url: 'https://example.org/' }],
     ...over,
@@ -76,6 +80,23 @@ describe('checkContent', () => {
       task: { id: 'task-2', text: 'Задание' },
     });
     expect(checkContent([lesson(), second], [memo()]).join()).toContain('повтор id «t-1»');
+  });
+
+  it('раздел этики без вопроса жирным не проходит', () => {
+    const body = BODY.replace('**Вопрос?**', 'Вопрос?');
+    expect(checkContent([lesson({}, body)], [memo()]).join()).toContain('вопроса жирным');
+  });
+
+  it('раздел этики с одной позицией не проходит', () => {
+    const body = BODY.replace('- **Нет.** Потому что.\n', '').replace('- **Нет.** Потому что.', '');
+    expect(checkContent([lesson({}, body)], [memo()]).join()).toContain('меньше двух позиций');
+  });
+
+  it('без мыслителя и с мыслителем не из текста не проходит', () => {
+    expect(checkContent([lesson({ thinkers: [] })], [memo()]).join()).toContain('не указан');
+    expect(checkContent([lesson({ thinkers: ['Кант'] })], [memo()]).join()).toContain(
+      'не упомянут',
+    );
   });
 
   it('нет обязательного раздела', () => {

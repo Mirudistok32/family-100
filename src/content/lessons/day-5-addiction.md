@@ -46,6 +46,7 @@ task:
     - id: d5-addiction-task-step
       label: Какой один шаг я могу сделать на этой неделе?
       sensitive: true
+thinkers: [Эпиктет]
 memo: if-addiction
 sources:
   - title: "Ал-Анон: три «не»"

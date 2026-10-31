@@ -36,6 +36,10 @@ const Memo = memo ? (await render(memo)).Content : undefined;
 
   <Content />
 
+  <p class="no-print small">
+    <a href={href('/ethics/')}>Вопросы этики всех дней</a>
+  </p>
+
   <section class="block block--task" aria-labelledby={`${data.task.id}-title`}>
     <h2 id={`${data.task.id}-title`}>Задание</h2>
     <p>{data.task.text}</p>

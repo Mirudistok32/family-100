@@ -47,6 +47,8 @@ const lessons = defineCollection({
         )
         .default([]),
     }),
+    /** Кто думал о вопросе этики этого урока. Каждое имя должно быть в тексте раздела. */
+    thinkers: z.array(z.string().min(1)).min(1),
     memo: reference('memos'),
     sources: z
       .array(z.object({ title: z.string().min(1), url: z.url({ protocol: /^https$/ }).optional() }))

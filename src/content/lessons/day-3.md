@@ -40,6 +40,7 @@ task:
     - id: d3-task-worry
       label: Есть ли в моих отношениях что-то, что тревожит?
       sensitive: true
+thinkers: [Иммануил Кант, Владимир Соловьёв]
 memo: seven-talks
 sources:
   - title: "Культура.РФ: о Петре и Февронии Муромских"

@@ -40,6 +40,7 @@ task:
     - id: d2-task-adult
       label: Какой взрослый поможет, если станет трудно?
       sensitive: true
+thinkers: [Конфуций, Мэн-цзы]
 memo: roles-in-family
 sources:
   - title: "Культура.РФ: о большой крестьянской семье"

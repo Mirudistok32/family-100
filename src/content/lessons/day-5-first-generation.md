@@ -44,6 +44,7 @@ task:
     - id: d5-first-generation-task-rules
       label: Мои правила для своей семьи
       sensitive: true
+thinkers: [Виктор Франкл]
 memo: new-line
 sources:
   - title: "Kaufman J., Zigler E. Do abused children become abusive parents? Am. J. Orthopsychiatry 57(2), 1987: реферат"

@@ -42,6 +42,7 @@ task:
     - id: d5-abuse-task-place
       label: Куда можно пойти, если станет опасно?
       sensitive: true
+thinkers: [Иммануил Кант]
 memo: if-danger
 sources:
   - title: "Campbell и др. Risk Factors for Femicide in Abusive Relationships. AJPH 93(7), 2003"

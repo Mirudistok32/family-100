@@ -43,6 +43,7 @@ task:
       label: Чему я могу научить другого уже сейчас?
     - id: d6-people-task-health
       label: Какой один шаг для здоровья сделаю на этой неделе?
+thinkers: [Иммануил Кант]
 memo: raising-people
 sources:
   - title: "James E. Hughes Jr. Family Wealth: Keeping It in the Family: пересказ Westwood"

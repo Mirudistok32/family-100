@@ -39,6 +39,7 @@ task:
     - id: d6-means-task-worry
       label: Что в деньгах тревожит больше всего?
       sensitive: true
+thinkers: [Аристотель]
 memo: budget-cushion
 sources:
   - title: "Рецензия на Fortune's Children Артура Вандербильта II: Financial Advisor"

@@ -1,6 +1,8 @@
 // Правила контента курса: чистые функции без файловой системы. Их запускает scripts/check-content.ts,
 // а покрывают тесты tests/unit/content-rules.test.ts.
 
+import { ETHICS_SECTION, parseEthics } from './ethics.ts';
+
 export interface ChecklistItem {
   id: string;
   text: string;
@@ -16,6 +18,7 @@ export interface LessonInput {
   file: string;
   body: string;
   data: {
+    thinkers?: string[];
     id?: string;
     day?: number;
     title?: string;
@@ -143,6 +146,19 @@ export function checkContent(lessons: LessonInput[], memos: MemoInput[]): string
     const titles = new Set(splitSections(body).map((section) => section.title));
     for (const required of REQUIRED_SECTIONS) {
       if (!titles.has(required)) errors.push(`${file}: нет раздела «${required}»`);
+    }
+
+    const ethics = splitSections(body).find((section) => section.title === ETHICS_SECTION);
+    if (ethics) {
+      const { question, positions } = parseEthics(ethics.text);
+      if (!question) errors.push(`${file}: раздел этики должен начинаться с вопроса жирным`);
+      if (positions.length < 2) errors.push(`${file}: в разделе этики меньше двух позиций`);
+      if (!data.thinkers?.length) errors.push(`${file}: у вопроса этики не указан мыслитель`);
+      for (const thinker of data.thinkers ?? []) {
+        if (!ethics.text.includes(thinker)) {
+          errors.push(`${file}: мыслитель «${thinker}» не упомянут в разделе этики`);
+        }
+      }
     }
 
     if (!data.sources?.length) errors.push(`${file}: нет источников`);

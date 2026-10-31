@@ -1,6 +1,6 @@
 ---
 import { DAYS } from '@/data/days';
-import { lessonHref } from '@/lib/urls';
+import { href, lessonHref } from '@/lib/urls';
 
 interface Props {
   /** Номер текущего дня. */
@@ -12,9 +12,10 @@ interface Props {
 const { day, available } = Astro.props;
 const previous = DAYS.find((item) => item.day === day - 1 && available.includes(item.day));
 const next = DAYS.find((item) => item.day === day + 1 && available.includes(item.day));
+const isLast = day === DAYS.at(-1)?.day;
 ---
 
-{(previous || next) && (
+{(previous || next || isLast) && (
   <nav class="day-pager" aria-label="Соседние дни">
     {previous ? (
       <a class="btn btn--ghost" href={lessonHref(previous.day)} rel="prev">
@@ -26,6 +27,11 @@ const next = DAYS.find((item) => item.day === day + 1 && available.includes(item
     {next && (
       <a class="btn" href={lessonHref(next.day)} rel="next">
         День {next.day} →
+      </a>
+    )}
+    {isLast && (
+      <a class="btn" href={href('/finish/')} rel="next">
+        Что дальше →
       </a>
     )}
   </nav>

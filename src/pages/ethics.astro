@@ -1,0 +1,80 @@
+---
+import { DAYS } from '@/data/days';
+import { splitSections } from '@/domain/content-rules';
+import { ETHICS_SECTION, parseEthics } from '@/domain/ethics';
+import { daysAwaitingReview } from '@/domain/visibility';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { visibleLessons } from '@/lib/lessons';
+import { lessonHref } from '@/lib/urls';
+
+// Список строится от опубликованных уроков, поэтому день-черновик сюда не попадёт.
+const lessons = await visibleLessons();
+const entries = lessons.map((lesson) => ({
+  lesson,
+  ethics: parseEthics(
+    splitSections(lesson.body ?? '').find((section) => section.title === ETHICS_SECTION)?.text ??
+      '',
+  ),
+}));
+const awaiting = daysAwaitingReview(
+  DAYS,
+  lessons.map((lesson) => lesson.data.day),
+);
+const heavy = lessons.some((lesson) => lesson.data.heavy);
+---
+
+<BaseLayout
+  title="Вопросы этики"
+  description="Вопрос этики каждого дня курса: кто об этом думал и какие есть позиции. Ответ выбираешь ты."
+  heavy={heavy}
+>
+  <div class="wrap">
+    <div class="prose">
+      <p class="hand">без правильных ответов</p>
+      <h1>Вопросы этики</h1>
+      <p>
+        В каждом дне курса есть вопрос, на который нет одного правильного ответа. Здесь они собраны
+        вместе: кто об этом думал и какие есть позиции. Примерь их на себя и выбери свою. Курс твои
+        ответы не собирает и оценок не ставит.
+      </p>
+      <p>
+        Выбирать не предлагаем только там, где речь о безопасности и достоинстве человека: насилие
+        оправдать нельзя, и курс говорит об этом прямо. Подробности и источники — в уроках.
+      </p>
+      {awaiting.length > 0 && (
+        <p class="small muted">
+          Вопросы дня {awaiting.join(', ')} появятся здесь после проверки специалистом.
+        </p>
+      )}
+
+      {entries.map(({ lesson, ethics }) => {
+        const { day, part, id, title, thinkers } = lesson.data;
+        const headingId = `ethics-${id.replaceAll('/', '-')}`;
+        return (
+          <section class="ethics-item" aria-labelledby={headingId} data-ethics-item={id}>
+            <p class="hand ethics-item__day">
+              день {day} · {title}
+            </p>
+            <h2 id={headingId}>{ethics.question}</h2>
+            <p class="small muted">Кто об этом думал: {thinkers.join(', ')}.</p>
+            <ul>
+              {ethics.positions.map((position) => (
+                <li>
+                  <strong>{position.title}</strong> {position.text}
+                </li>
+              ))}
+            </ul>
+            {ethics.limit && (
+              <p>
+                <strong>Здесь курс не предлагает выбирать.</strong> {ethics.limit}
+              </p>
+            )}
+            <p class="small">
+              <a href={`${lessonHref(day, part)}#вопрос-этики`}>Подробнее в уроке</a>
+            </p>
+          </section>
+        );
+      })}
+    </div>
+  </div>
+</BaseLayout>

@@ -603,6 +603,18 @@ main:focus {
   margin-bottom: 0;
 }
 
+.ethics-item {
+  margin-block: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--rule-faint);
+}
+.ethics-item__day {
+  margin-bottom: var(--space-1);
+}
+.ethics-item h2 {
+  margin-top: 0;
+}
+
 .note-field .constitution__prompt {
   margin: 0 0 var(--space-2);
 }

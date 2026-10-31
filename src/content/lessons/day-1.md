@@ -38,6 +38,7 @@ task:
     - id: d1-task-hard
       label: Что из того, что вижу дома, не хочется повторять?
       sensitive: true
+thinkers: [Аристотель]
 memo: what-family-gives
 sources:
   - title: "Harvard Gazette, 2017: о Гарвардском исследовании и словах Роберта Уолдингера"

@@ -42,6 +42,7 @@ task:
     - id: d5-distance-task-support
       label: Кто может быть рядом, пока я это делаю?
       sensitive: true
+thinkers: [Конфуций, Аристотель, Джейн Инглиш]
 memo: distance-ladder
 sources:
   - title: "Корнеллский университет: How to mend a family rift, об исследовании Карла Пиллемера"

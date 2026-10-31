@@ -20,6 +20,8 @@ const PAGES = [
   `${BASE}/day/7/`,
   `${BASE}/my-family/`,
   `${BASE}/help/`,
+  `${BASE}/ethics/`,
+  `${BASE}/finish/`,
 ];
 
 for (const path of PAGES) {

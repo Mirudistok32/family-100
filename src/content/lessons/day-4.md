@@ -43,6 +43,7 @@ task:
     - id: d4-task-safe
       label: Было ли мне в этой ссоре страшно?
       sensitive: true
+thinkers: [Джозеф Батлер]
 memo: fair-fight
 sources:
   - title: "Институт Готтмана: четыре всадника"
