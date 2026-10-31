@@ -26,6 +26,7 @@
     "contrast": "node scripts/contrast.mjs",
     "shots": "node scripts/shots.mjs",
     "check:content": "node scripts/check-content.ts",
+    "check:links": "node scripts/check-links.ts",
     "build:drafts": "npm run check:content && astro build --mode drafts",
     "og": "node scripts/og.mjs"
   },
