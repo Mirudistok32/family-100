@@ -361,7 +361,8 @@ main:focus {
   font-weight: 600;
 }
 .block--eras > ul:first-of-type {
-  margin: var(--space-5) 0;
+  /* Отступ слева равен выступу точки: она не должна выходить за край блока. */
+  margin: var(--space-5) 0 var(--space-5) 0.45rem;
   padding: 0;
   list-style: none;
 }
