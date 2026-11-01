@@ -39,10 +39,28 @@ export interface MemoInput {
   data: { id?: string; title?: string; day?: number };
 }
 
-export const REQUIRED_SECTIONS = ['История', 'Пример из жизни', 'Суть', 'Вопрос этики'] as const;
+export const ERAS_SECTION = 'Как было у нас';
+export const TIPS_SECTION = 'Советы';
+
+export const REQUIRED_SECTIONS = [
+  'История',
+  ERAS_SECTION,
+  'Пример из жизни',
+  'Суть',
+  TIPS_SECTION,
+  'Вопрос этики',
+] as const;
 
 /** Разделы, где речь о реальных людях и героях: у них род есть, проверка рода к ним не относится. */
-const SECTIONS_WITH_CHARACTERS = new Set<string>(['История', 'Пример из жизни']);
+const SECTIONS_WITH_CHARACTERS = new Set<string>(['История', ERAS_SECTION, 'Пример из жизни']);
+
+/** Лента эпох идёт от славян до наших дней: первая и последняя эпохи обязательны. */
+const ERA_LINE = /^- \*\*([^*]+?)\.?\*\*/gmu;
+const REQUIRED_ERA_STARTS = ['Славяне', 'Сейчас'] as const;
+/** Совет — пункт нумерованного списка: жирное название и откуда он взят в скобках в конце. */
+const TIP_LINE = /^\d+\. \*\*.+\*\*.*\([^()]+\)\.?\s*$/gmu;
+const ANY_NUMBERED_LINE = /^\d+\. /gmu;
+const MIN_TIPS_PER_LESSON = 3;
 
 // Родовые формы про читателя. Прошедшее время после «ты», краткие прилагательные, «(а)».
 const GENDERED_FORMS: RegExp[] = [
@@ -157,6 +175,28 @@ export function checkContent(lessons: LessonInput[], memos: MemoInput[]): string
     const titles = new Set(splitSections(body).map((section) => section.title));
     for (const required of REQUIRED_SECTIONS) {
       if (!titles.has(required)) errors.push(`${file}: нет раздела «${required}»`);
+    }
+
+    const eras = splitSections(body).find((section) => section.title === ERAS_SECTION);
+    if (eras) {
+      const names = [...eras.text.matchAll(ERA_LINE)].map((match) => match[1] ?? '');
+      for (const start of REQUIRED_ERA_STARTS) {
+        if (!names.some((name) => name.startsWith(start))) {
+          errors.push(`${file}: в разделе «${ERAS_SECTION}» нет эпохи «${start}»`);
+        }
+      }
+    }
+
+    const tips = splitSections(body).find((section) => section.title === TIPS_SECTION);
+    if (tips) {
+      const numbered = tips.text.match(ANY_NUMBERED_LINE)?.length ?? 0;
+      const sourced = tips.text.match(TIP_LINE)?.length ?? 0;
+      if (numbered < MIN_TIPS_PER_LESSON) {
+        errors.push(`${file}: в разделе «${TIPS_SECTION}» меньше ${MIN_TIPS_PER_LESSON} советов`);
+      }
+      if (sourced !== numbered) {
+        errors.push(`${file}: не у каждого совета в скобках указано, откуда он`);
+      }
     }
 
     const ethics = splitSections(body).find((section) => section.title === ETHICS_SECTION);

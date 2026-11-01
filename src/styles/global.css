@@ -353,6 +353,48 @@ main:focus {
   background: var(--accent-soft);
   border-inline-start: 4px solid var(--accent);
 }
+/* Лента эпох: одна линия от славян до наших дней, точка на каждое время. */
+.block--eras > h2,
+.block--tips > h2 {
+  font-family: var(--font-hand);
+  font-size: 2rem;
+  font-weight: 600;
+}
+.block--eras > ul:first-of-type {
+  margin: var(--space-5) 0;
+  padding: 0;
+  list-style: none;
+}
+.block--eras > ul:first-of-type > li {
+  position: relative;
+  margin: 0;
+  padding: 0 0 var(--space-4) var(--space-5);
+  border-inline-start: 2px solid var(--rule);
+}
+.block--eras > ul:first-of-type > li:last-child {
+  padding-bottom: 0;
+}
+.block--eras > ul:first-of-type > li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: -0.45rem;
+  top: 0.45rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  background: var(--accent);
+  border-radius: 50%;
+}
+/* Номера идут через весь курс: от первого дня к последнему. */
+.block--tips > ol {
+  padding-inline-start: var(--space-6);
+}
+.block--tips > ol > li {
+  margin-block: var(--space-3);
+}
+.block--tips > ol > li::marker {
+  color: var(--accent);
+  font-weight: 600;
+}
 .block--memo {
   margin-block: var(--space-6);
 }
