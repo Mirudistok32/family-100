@@ -26,7 +26,7 @@ const lessons = defineCollection({
     minutes: z.number().int().min(5).max(40),
     /** Тяжёлая тема: предупреждение, быстрый выход и блок помощи на странице. */
     heavy: z.boolean().default(false),
-    /** Черновик не публикуется без проверки (пункт 5.4 плана). */
+    /** Черновик не попадает в публикацию. */
     draft: z.boolean().default(false),
     teen: z.array(checklistItem).min(1),
     couple: z.array(checklistItem).min(1),

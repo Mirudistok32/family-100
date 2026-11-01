@@ -2,7 +2,7 @@
 
 /**
  * Показываем только памятки опубликованных уроков. Иначе памятка дня-черновика попала бы на страницу
- * `/memos` и в публикацию раньше проверки специалистом (пункт 5.4 плана).
+ * `/memos` и в публикацию раньше самого дня.
  */
 export function pickVisibleMemos<T>(
   lessons: readonly { memoId: string; day: number; order: number; lesson: T }[],
