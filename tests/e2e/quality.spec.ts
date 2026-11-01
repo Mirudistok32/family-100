@@ -18,7 +18,6 @@ const KEYBOARD_ROUTES = [
   '/family-100/day/5/distance/',
   '/family-100/day/6/means/',
   '/family-100/my-family/',
-  '/family-100/help/',
   '/family-100/memos/',
   '/family-100/ethics/',
   '/family-100/finish/',

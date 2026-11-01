@@ -10,18 +10,16 @@ async function storageDump(page: Page): Promise<string> {
   return page.evaluate(() => JSON.stringify(Object.entries(localStorage).sort()));
 }
 
-test('подросток в опасности видит 112 и взрослого, но не лестницу', async ({ page }) => {
+test('подросток в опасности видит полицию и взрослого, но не лестницу', async ({ page }) => {
   await page.goto(PAGE);
   await page.getByRole('radio', { name: 'Ещё нет 18' }).check();
   await expect(page.getByRole('status')).toContainText('Ответь на вопросы');
   await page.getByRole('radio', { name: 'Бывает страшно или опасно' }).check();
   await expect(card(page, 'danger-now')).toBeVisible();
-  await expect(card(page, 'danger-now')).toContainText('112');
+  await expect(card(page, 'danger-now')).toContainText('полицию');
   await expect(card(page, 'teen-danger')).toBeVisible();
   await expect(card(page, 'adult-ladder')).toBeHidden();
   await expect(page.getByRole('status')).toContainText('Подходящих карточек ниже: 2');
-  await page.locator('[data-situation-footer]').getByRole('link', { name: '«Помощь»' }).click();
-  await expect(page).toHaveURL(/\/help\/$/);
 });
 
 test('взрослому вопрос о поступках появляется только без опасности', async ({ page }) => {
@@ -75,7 +73,7 @@ test('после ухода и кнопки «назад» ответов нет
   await expect(page.locator('[data-situation-footer]')).toBeHidden();
 
   await page.getByRole('radio', { name: 'Ещё нет 18' }).check();
-  await page.goto('/family-100/help/');
+  await page.goto('/family-100/about/');
   await page.goBack();
   await expect(page.getByRole('radio', { name: 'Ещё нет 18' })).not.toBeChecked();
 });

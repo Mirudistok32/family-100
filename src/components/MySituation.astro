@@ -9,7 +9,6 @@ import {
   SITUATION_CARDS,
 } from '@/data/my-situation';
 import { CARD_IDS } from '@/domain/situation';
-import { href } from '@/lib/urls';
 ---
 
 <div class="situation">
@@ -65,8 +64,7 @@ import { href } from '@/lib/urls';
     );
   })}
   <p data-situation-footer>
-    Это не диагноз и не приговор. Решаешь ты, а живой специалист поможет лучше страницы: контакты
-    есть на странице <a href={href('/help/')}>«Помощь»</a>.
+    Это не диагноз и не приговор. Решаешь ты, а живой специалист поможет лучше страницы.
   </p>
 </div>
 

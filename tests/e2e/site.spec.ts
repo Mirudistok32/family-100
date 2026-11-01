@@ -19,7 +19,6 @@ const PAGES = [
   `${BASE}/day/6/means/`,
   `${BASE}/day/7/`,
   `${BASE}/my-family/`,
-  `${BASE}/help/`,
   `${BASE}/ethics/`,
   `${BASE}/finish/`,
 ];
@@ -99,7 +98,7 @@ test('перед ссылкой, перенесённой на новую стр
 });
 
 test('возрастной знак 16+ есть в подвале и объяснён на странице о курсе', async ({ page }) => {
-  for (const path of [`${BASE}/`, `${BASE}/day/1/`, `${BASE}/help/`]) {
+  for (const path of [`${BASE}/`, `${BASE}/day/1/`, `${BASE}/about/`]) {
     await page.goto(path);
     await expect(page.locator('footer')).toContainText('16+');
   }
@@ -111,7 +110,6 @@ test('возрастной знак 16+ есть в подвале и объяс
   await expect(heading).toBeInViewport();
   const main = page.locator('main');
   await expect(main).toContainText('вместе со взрослым, которому доверяешь');
-  await expect(main).toContainText('открыты в любом возрасте');
 });
 
 test('картинка для соцсетей на месте', async ({ request }) => {
@@ -134,8 +132,8 @@ test('нет ошибок консоли на главной и уроке, CSP 
 
 test('внутренняя ссылка из текста урока ведёт на страницу в подпапке сайта', async ({ page }) => {
   await page.goto(`${BASE}/day/1/`);
-  await page.locator('.block--essence').getByRole('link', { name: '«Помощь»' }).click();
-  await expect(page).toHaveURL(new RegExp(`${BASE}/help/$`));
+  await page.locator('.block--essence').getByRole('link', { name: 'день 5' }).click();
+  await expect(page).toHaveURL(new RegExp(`${BASE}/day/5/$`));
 });
 
 test('часть о зависимости: быстрый выход, помощь, чужая вина и шаги для школьника', async ({
@@ -150,8 +148,6 @@ test('часть о зависимости: быстрый выход, помо�
   await expect(essence).toContainText('Это не диагноз');
   await expect(essence).toContainText('Не отбирай, не выливай и не прячь');
   await expect(page.getByRole('listitem').filter({ hasText: 'я не могу вылечить' })).toBeVisible();
-  await essence.getByRole('link', { name: '«Помощь»' }).last().click();
-  await expect(page).toHaveURL(new RegExp(`${BASE}/help/#help-addiction$`));
 });
 
 test('часть о насилии: признаки без диагнозов и без отметок, ведут на помощь', async ({ page }) => {
@@ -165,8 +161,6 @@ test('часть о насилии: признаки без диагнозов �
   await expect(essence).toContainText('Если тебе уже есть 18: план безопасности');
   await expect(page.getByText('поэтому отмечать необязательно')).toBeVisible();
   await expect(page.getByText('уход бывает самым опасным моментом').first()).toBeVisible();
-  await essence.getByRole('link', { name: '«Помощь»' }).last().click();
-  await expect(page).toHaveURL(new RegExp(`${BASE}/help/$`));
 });
 
 test('вход в день 5 предупреждает о теме и даёт выбрать часть', async ({ page }) => {
@@ -184,16 +178,9 @@ test('день 4 отделяет ссору от насилия и ведёт �
   await expect(
     essence.locator('strong', { hasText: 'Твою будущую семью строишь ты' }),
   ).toBeVisible();
-  await expect(essence.getByRole('link', { name: '«Помощь»' })).toBeVisible();
   await essence.getByRole('link', { name: 'день 5' }).click();
   await expect(page).toHaveURL(new RegExp(`${BASE}/day/5/$`));
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Когда в семье беда');
-  await expect(
-    page
-      .getByRole('main')
-      .getByRole('link', { name: /Помощь|службы/ })
-      .first(),
-  ).toBeVisible();
 });
 
 test('день 3 называет предание преданием и ведёт от тревожных признаков к помощи', async ({
@@ -207,8 +194,8 @@ test('день 3 называет предание преданием и вед�
   await expect(
     essence.locator('strong', { hasText: 'твою будущую семью строишь ты' }),
   ).toBeVisible();
-  await essence.getByRole('link', { name: '«Помощь»' }).click();
-  await expect(page).toHaveURL(new RegExp(`${BASE}/help/$`));
+  await essence.getByRole('link', { name: 'день 5' }).click();
+  await expect(page).toHaveURL(new RegExp(`${BASE}/day/5/$`));
 });
 
 test('день 2 прямо говорит ребёнку из любой семьи, что свою семью строит он', async ({ page }) => {

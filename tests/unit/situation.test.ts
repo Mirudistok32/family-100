@@ -102,9 +102,9 @@ describe('«Моя ситуация»: тексты', () => {
     expect(SIGN_OPTIONS.map((option) => option.value)).toEqual([...CHANGE_SIGNS]);
   });
 
-  it('при опасности есть 112 и живой человек', () => {
-    expect(SITUATION_CARDS['danger-now'].paragraphs.join(' ')).toContain('112');
-    expect(SITUATION_CARDS['teen-danger'].paragraphs.join(' ')).toContain('телефон доверия');
+  it('при опасности есть полиция и живой человек', () => {
+    expect(SITUATION_CARDS['danger-now'].paragraphs.join(' ')).toContain('полицию');
+    expect(SITUATION_CARDS['teen-danger'].paragraphs.join(' ')).toContain('взрослому');
     expect(SITUATION_CARDS['adult-danger'].paragraphs.join(' ')).toContain('специалистом');
   });
 });

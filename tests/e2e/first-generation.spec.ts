@@ -53,7 +53,6 @@ test('часть говорит, что повторение не пригово
   await expect(essence).toContainText('Это выбор и работа, а не только решение');
   await expect(essence).toContainText('Если тебе 14–17');
   await expect(essence).toContainText('Твою будущую семью строишь ты');
-  await expect(essence.getByRole('link', { name: '«Помощь»' }).first()).toBeVisible();
   await expect(page.locator('.block--ethics')).toContainText('не значит, что страдать полезно');
   await expect(page.getByRole('heading', { name: 'Я начинаю новую линию' })).toBeVisible();
 });

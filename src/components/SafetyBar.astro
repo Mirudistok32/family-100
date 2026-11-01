@@ -1,13 +1,9 @@
 ---
-import { QUICK_EXIT_URL } from '@/data/helplines';
-import { href } from '@/lib/urls';
+import { QUICK_EXIT_URL } from '@/data/quick-exit';
 ---
 
 <div class="safety-bar" role="region" aria-label="Безопасность на этой странице">
   <div class="wrap safety-bar__row">
-    <a class="safety-bar__help" href={href('/help/')}>
-      Нужна помощь
-    </a>
     <a class="btn" href={QUICK_EXIT_URL} rel="noopener noreferrer" data-quick-exit>
       Быстрый выход
     </a>
