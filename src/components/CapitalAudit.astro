@@ -21,10 +21,10 @@ import { AUDIENCES, CAPITALS } from '@/domain/capital-audit';
     где меньше всего «да», там и стоит начать.
   </p>
   <form class="audit__form" data-audit-form autocomplete="off">
-    <fieldset class="situation__group">
+    <fieldset class="choice__group">
       <legend>{AUDIENCE_QUESTION}</legend>
       {AUDIENCES.map((audience) => (
-        <label class="situation__option">
+        <label class="choice__option">
           <input type="radio" name="audience" value={audience} />
           <span>{AUDIENCE_TITLES[audience]}</span>
         </label>
@@ -39,11 +39,11 @@ import { AUDIENCES, CAPITALS } from '@/domain/capital-audit';
             {AUDIT_STATEMENTS.filter(
               (item) => item.audience === audience && item.capital === capital,
             ).map((item) => (
-              <fieldset class="situation__group audit__question">
+              <fieldset class="choice__group audit__question">
                 <legend>{item.text}</legend>
                 <div class="audit__options">
                   {ANSWER_OPTIONS.map((option) => (
-                    <label class="situation__option">
+                    <label class="choice__option">
                       <input type="radio" name={item.id} value={option.value} />
                       <span>{option.label}</span>
                     </label>
@@ -59,7 +59,7 @@ import { AUDIENCES, CAPITALS } from '@/domain/capital-audit';
       Очистить ответы
     </button>
   </form>
-  <p class="situation__status" role="status" data-audit-status></p>
+  <p class="choice__status" role="status" data-audit-status></p>
   <section class="callout callout--calm" data-audit-result aria-labelledby="audit-steps-title">
     <div data-audit-summary hidden>
       <h3>Что получилось</h3>

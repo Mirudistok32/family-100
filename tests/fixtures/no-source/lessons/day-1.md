@@ -5,12 +5,12 @@ title: Зачем нужна семья
 goal: Заглушка цели. Текст дня появится в пункте 2.1.
 question: Заглушка вопроса?
 minutes: 25
-teen:
-  - id: d1-teen-1
-    text: Заглушка пункта для школьника.
-couple:
-  - id: d1-couple-1
-    text: Заглушка пункта для пары.
+self:
+  - id: d1-self-1
+    text: Заглушка пункта для одного.
+together:
+  - id: d1-together-1
+    text: Заглушка пункта для двоих.
 task:
   id: d1-task
   text: Заглушка задания.

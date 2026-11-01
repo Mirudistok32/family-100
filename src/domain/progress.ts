@@ -20,6 +20,20 @@ export function emptyProgress(): Progress {
 }
 
 const ID = /^[a-z0-9]+(?:[-/][a-z0-9]+)*$/;
+
+/** Пункты чек-листов прежней программы курса: этих пунктов больше нет, в итог они не идут (docs/save-format.md). */
+const RETIRED_ITEM = /^d[1-7]-(?:[a-z-]+-)?(?:teen|couple)-\d+$/;
+
+/** Названия дней прежней программы. С таким названием «Продолжить» показал бы урок, которого нет. */
+const RETIRED_TITLES: ReadonlySet<string> = new Set([
+  'Зачем нужна семья',
+  'Какие бывают семьи и какие в них роли',
+  'Как выбрать спутника жизни и создать семью',
+  'Как жить вместе',
+  'Когда в семье беда',
+  'Четыре капитала',
+  'Семья на 100 лет',
+]);
 const MAX_TITLE = 200;
 
 /** Внутренний адрес: только путь сайта, без чужого домена и `javascript:`. Значение пришло из хранилища. */
@@ -33,6 +47,8 @@ function parseLast(value: unknown): LastLesson | undefined {
   if (typeof id !== 'string' || !ID.test(id)) return undefined;
   if (typeof title !== 'string' || !title || title.length > MAX_TITLE) return undefined;
   if (!isSafePath(path)) return undefined;
+  // Адрес части дня (`day-5/abuse`) или урок прежней программы: такой страницы больше нет.
+  if (id.includes('/') || RETIRED_TITLES.has(title)) return undefined;
   return { id, title, path };
 }
 
@@ -52,7 +68,9 @@ export function normalizeProgress(data: unknown): Progress {
   const { schemaVersion, checked, last } = data as Record<string, unknown>;
   if (schemaVersion !== 1) return emptyProgress();
   const ids = Array.isArray(checked)
-    ? checked.filter((id): id is string => typeof id === 'string' && ID.test(id))
+    ? checked.filter(
+        (id): id is string => typeof id === 'string' && ID.test(id) && !RETIRED_ITEM.test(id),
+      )
     : [];
   const progress: Progress = { schemaVersion: 1, checked: [...new Set(ids)] };
   const parsedLast = parseLast(last);

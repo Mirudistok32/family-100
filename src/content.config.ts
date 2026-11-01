@@ -13,28 +13,24 @@ const lessons = defineCollection({
     generateId: ({ data }) => String(data['id']),
   }),
   schema: z.object({
-    /** Постоянный id: `day-1` или `day-5/addiction`. Не меняется без миграции. */
+    /** Постоянный id: `day-1`. Не меняется без миграции. */
     id: slug,
     day: z.number().int().min(1).max(7),
-    /** Адрес части внутри дня: `addiction` для `/day/5/addiction/`. */
-    part: slug.optional(),
-    /** Порядок частей внутри дня. */
-    order: z.number().int().min(1).default(1),
     title: z.string().min(1),
     goal: z.string().min(1),
     question: z.string().min(1),
     minutes: z.number().int().min(5).max(40),
-    /** Тяжёлая тема: предупреждение, быстрый выход и блок помощи на странице. */
-    heavy: z.boolean().default(false),
     /** Черновик не попадает в публикацию. */
     draft: z.boolean().default(false),
-    teen: z.array(checklistItem).min(1),
-    couple: z.array(checklistItem).min(1),
+    /** Чек-лист «Начинаю с себя». */
+    self: z.array(checklistItem).min(1),
+    /** Чек-лист «Делаем вместе». */
+    together: z.array(checklistItem).min(1),
     task: z.object({
       id: slug,
       text: z.string().min(1),
-      /** Инструмент задания. `my-situation` ничего не сохраняет, `capital-audit` хранит ответы в записях. */
-      tool: z.enum(['my-situation', 'capital-audit']).optional(),
+      /** Инструмент задания. `capital-audit` хранит ответы в записях. */
+      tool: z.enum(['capital-audit']).optional(),
       /** Ссылка под заданием. Адрес от корня сайта, подпапку добавляет шаблон. */
       link: z.object({ href: z.string().startsWith('/'), label: z.string().min(1) }).optional(),
       fields: z
@@ -66,7 +62,6 @@ const memos = defineCollection({
     id: slug,
     title: z.string().min(1),
     day: z.number().int().min(1).max(7),
-    order: z.number().int().min(1).default(1),
   }),
 });
 

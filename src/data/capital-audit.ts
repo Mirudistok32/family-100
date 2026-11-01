@@ -9,8 +9,8 @@ export interface AuditStatement extends AuditQuestion {
 export const AUDIENCE_QUESTION = 'Кто проходит аудит?';
 
 export const AUDIENCE_TITLES: Record<Audience, string> = {
-  teen: 'Мне 14–17',
-  couple: 'Мы пара',
+  self: 'Начинаю с себя',
+  couple: 'Мы вместе',
 };
 
 export const CAPITAL_TITLES: Record<Capital, string> = {
@@ -35,74 +35,74 @@ export const LEVEL_TITLES: Record<Level, string> = {
 
 export const AUDIT_STATEMENTS: readonly AuditStatement[] = [
   {
-    id: 'teen-health',
-    audience: 'teen',
+    id: 'self-health',
+    audience: 'self',
     capital: 'human',
     text: 'Я в основном высыпаюсь, двигаюсь и знаю, куда идти, если плохо себя чувствую.',
   },
   {
-    id: 'teen-promise',
-    audience: 'teen',
+    id: 'self-promise',
+    audience: 'self',
     capital: 'human',
     text: 'Обещания я обычно выполняю.',
   },
   {
-    id: 'teen-ability',
-    audience: 'teen',
+    id: 'self-ability',
+    audience: 'self',
     capital: 'human',
     text: 'Я знаю, что у меня получается, и занимаюсь этим.',
   },
   {
-    id: 'teen-learn',
-    audience: 'teen',
+    id: 'self-learn',
+    audience: 'self',
     capital: 'intellectual',
-    text: 'Я учусь чему-то, что мне правда интересно.',
+    text: 'Я продолжаю учиться тому, что мне правда интересно.',
   },
   {
-    id: 'teen-skill',
-    audience: 'teen',
+    id: 'self-skill',
+    audience: 'self',
     capital: 'intellectual',
     text: 'Я умею делать что-то руками или по дому: чинить, готовить, шить.',
   },
   {
-    id: 'teen-elders',
-    audience: 'teen',
+    id: 'self-elders',
+    audience: 'self',
     capital: 'intellectual',
     text: 'Есть кто-то старший, у кого можно спросить и чему-то научиться.',
   },
   {
-    id: 'teen-adult',
-    audience: 'teen',
+    id: 'self-adult',
+    audience: 'self',
     capital: 'social',
-    text: 'Есть хотя бы один взрослый, к которому можно прийти с трудным вопросом.',
+    text: 'Есть хотя бы один человек, к которому можно прийти с трудным вопросом.',
   },
   {
-    id: 'teen-friends',
-    audience: 'teen',
+    id: 'self-friends',
+    audience: 'self',
     capital: 'social',
     text: 'У меня есть друзья, с которыми можно говорить о важном.',
   },
   {
-    id: 'teen-community',
-    audience: 'teen',
+    id: 'self-community',
+    audience: 'self',
     capital: 'social',
-    text: 'Я участвую в чём-то кроме школы: кружок, команда, общее дело.',
+    text: 'Я участвую в чём-то кроме работы: клуб, команда, общее дело.',
   },
   {
-    id: 'teen-track',
-    audience: 'teen',
+    id: 'self-track',
+    audience: 'self',
     capital: 'financial',
     text: 'Я знаю, на что уходят мои деньги, даже если их немного.',
   },
   {
-    id: 'teen-save',
-    audience: 'teen',
+    id: 'self-save',
+    audience: 'self',
     capital: 'financial',
     text: 'Я откладываю хотя бы понемногу на что-то своё.',
   },
   {
-    id: 'teen-credit',
-    audience: 'teen',
+    id: 'self-credit',
+    audience: 'self',
     capital: 'financial',
     text: 'Я понимаю, что такое кредит и процент, и не занимаю, не подумав.',
   },
@@ -152,7 +152,7 @@ export const AUDIT_STATEMENTS: readonly AuditStatement[] = [
     id: 'couple-help',
     audience: 'couple',
     capital: 'social',
-    text: 'Есть люди, к которым мы можем обратиться в беде, и мы сами помогаем другим.',
+    text: 'Есть люди, к которым мы можем обратиться за помощью, и мы сами помогаем другим.',
   },
   {
     id: 'couple-community',
@@ -181,13 +181,12 @@ export const AUDIT_STATEMENTS: readonly AuditStatement[] = [
 ];
 
 export const AUDIT_STEPS: Record<Audience, Record<Capital, string>> = {
-  teen: {
+  self: {
     human: 'Выбери на неделю одну привычку: ложиться на полчаса раньше или каждый день гулять.',
     intellectual: 'Попроси человека рядом показать одно умение. Оно может быть совсем простым.',
     social:
-      'Напиши человеку, с которым давно хочется поговорить, или загляни в кружок, который всё откладывается.',
-    financial:
-      'Месяц записывай, на что уходят твои деньги, даже если их немного. Считать деньги родителей не нужно.',
+      'Напиши человеку, с которым давно хочется поговорить, или загляни в клуб, который всё откладывается.',
+    financial: 'Месяц записывай, на что уходят твои деньги, даже если их немного.',
   },
   couple: {
     human: 'Выберите на месяц одну общую привычку и поддерживайте друг друга, а не проверяйте.',

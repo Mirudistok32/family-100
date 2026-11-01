@@ -165,10 +165,6 @@ main {
 .callout > :last-child {
   margin-bottom: 0;
 }
-.callout--danger {
-  background: var(--danger-soft);
-  border-color: var(--danger);
-}
 .callout--calm {
   background: var(--green-soft);
   border-color: var(--green);
@@ -373,10 +369,6 @@ main:focus {
   margin-top: 0;
 }
 
-.part-list {
-  padding-inline-start: var(--space-5);
-}
-
 .day-pager {
   display: flex;
   flex-wrap: wrap;
@@ -463,41 +455,35 @@ main:focus {
   margin: var(--space-2) 0 0;
 }
 
-.situation {
-  margin-block: var(--space-5);
-}
-.situation__group {
+.choice__group {
   margin: 0 0 var(--space-5);
   padding: 0;
   border: 0;
 }
-.situation__group legend {
+.choice__group legend {
   margin-bottom: var(--space-2);
   padding: 0;
   font-weight: 600;
 }
-.situation__option {
+.choice__option {
   display: flex;
   gap: var(--space-3);
   align-items: center;
   min-height: var(--target);
   cursor: pointer;
 }
-.situation__option input {
+.choice__option input {
   flex: none;
   width: 1.5rem;
   height: 1.5rem;
   margin: 0;
   accent-color: var(--accent);
 }
-.situation .callout > :first-child {
-  margin-top: 0;
-}
-.situation__status {
+.choice__status {
   margin-block: var(--space-4);
   font-weight: 600;
 }
-.situation__status:empty {
+.choice__status:empty {
   display: none;
 }
 
@@ -696,7 +682,6 @@ main:focus {
   .site-header,
   .site-footer,
   .skip-link,
-  .safety-bar,
   .day-pager,
   .no-print {
     display: none !important;
@@ -747,24 +732,4 @@ main:focus {
     margin-top: 12pt;
     break-inside: avoid;
   }
-}
-
-.safety-bar {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background: var(--danger-soft);
-  border-bottom: 1px solid var(--danger);
-}
-.safety-bar__row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-2) var(--space-5);
-  padding-block: var(--space-1);
-}
-/* Полоса прилипает к верху: фокус и якорь не должны оказаться под ней (WCAG 2.4.11). */
-html:has(.safety-bar) {
-  scroll-padding-top: 5rem;
 }

@@ -3,19 +3,7 @@ import { expect, test } from '@playwright/test';
 const BASE = '/family-100';
 const ETHICS = `${BASE}/ethics/`;
 const FINISH = `${BASE}/finish/`;
-const LESSONS = [
-  '/day/1/',
-  '/day/2/',
-  '/day/3/',
-  '/day/4/',
-  '/day/5/addiction/',
-  '/day/5/abuse/',
-  '/day/5/distance/',
-  '/day/5/first-generation/',
-  '/day/6/people/',
-  '/day/6/means/',
-  '/day/7/',
-];
+const LESSONS = ['/day/1/', '/day/2/', '/day/3/', '/day/4/', '/day/5/', '/day/6/', '/day/7/'];
 
 test('из каждого урока есть ссылка на /ethics, и вопрос урока там есть', async ({ page }) => {
   const questions: string[] = [];
@@ -56,17 +44,6 @@ test('ссылка ведёт к разделу этики в уроке', async
   await expect(page.getByRole('heading', { name: 'Вопрос этики' })).toBeInViewport();
 });
 
-test('день с позициями без навязывания и граница о насилии', async ({ page }) => {
-  await page.goto(ETHICS);
-  await expect(page.locator('[data-ethics-item="day-1"]')).not.toContainText(
-    'Здесь курс не предлагает выбирать',
-  );
-  await expect(page.locator('[data-ethics-item="day-5/abuse"]')).toContainText(
-    'Насилие нельзя оправдать',
-  );
-  await expect(page.getByRole('link', { name: 'Быстрый выход' })).toBeVisible();
-});
-
 test('день 7 ведёт на экран завершения', async ({ page }) => {
   await page.goto(`${BASE}/day/7/`);
   await page.getByRole('link', { name: 'Что дальше' }).click();
@@ -89,7 +66,7 @@ test('экран показывает сделанное и не считает 
   await page.evaluate(() => {
     localStorage.setItem(
       'family100:progress:v1',
-      JSON.stringify({ schemaVersion: 1, checked: ['d1-teen-1', 'd1-teen-2'] }),
+      JSON.stringify({ schemaVersion: 1, checked: ['d1-self-1', 'd1-self-2'] }),
     );
     localStorage.setItem(
       'family100:notes:v1',
@@ -99,7 +76,7 @@ test('экран показывает сделанное и не считает 
           'd7-task-mission': 'Миссия',
           'constitution-values': 'Честность',
           'constitution-version': 'couple',
-          'd6-means-task-audit': '{"audience":"teen","answers":{}}',
+          'd6-means-task-audit': '{"audience":"self","answers":{}}',
         },
         keep: [],
       }),

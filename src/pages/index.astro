@@ -9,7 +9,7 @@ const available = new Set(lessons.map((lesson) => lesson.data.day));
 const itemIds = (day: number) =>
   lessons
     .filter((lesson) => lesson.data.day === day)
-    .flatMap((lesson) => [...lesson.data.teen, ...lesson.data.couple])
+    .flatMap((lesson) => [...lesson.data.self, ...lesson.data.together])
     .map((item) => item.id)
     .join(' ');
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
@@ -37,12 +37,12 @@ const jsonLd = {
       <p class="hand">семь дней, один альбом</p>
       <h1>{SITE_TITLE}</h1>
       <p class="lead">
-        Семь коротких дней о том, зачем нужна семья, как её создать и как растить её силу и силу
-        каждого в ней. С историей, живыми примерами, чек-листами и памятками.
+        Семь коротких дней по книге Джеймса Хьюза «Богатство семьи»: люди, знания, связи и деньги
+        семьи на сто лет вперёд. С историей, живыми примерами, чек-листами и памятками.
       </p>
       <p>
-        Этот курс для тех, кто хочет построить крепкую семью, и особенно для тех, кто не видел
-        хорошего примера дома. Твою будущую семью строишь ты.
+        Этот курс для тех, кто создаёт семью или уже растит её и думает дальше своей жизни. Твою
+        семью строишь ты.
       </p>
       <p>На один день уходит 20–30 минут. Порядок лучше сохранить, но ничего не заперто.</p>
       <p class="callout resume" data-resume hidden>
@@ -52,14 +52,15 @@ const jsonLd = {
 
     <h2 id="days">Семь дней</h2>
     <ol class="day-list">
-      {DAYS.map(({ day, title, summary, heavy }) => (
+      {DAYS.map(({ day, title, summary, section }) => (
         <li class="day-card" data-day={day}>
-          <p class="hand day-card__number">день {day}</p>
+          <p class="hand day-card__number">
+            день {day} · {section}
+          </p>
           <h3 class="day-card__title">
             {available.has(day) ? <a href={lessonHref(day)}>{title}</a> : title}
           </h3>
           <p>{summary}</p>
-          {heavy && <p class="small muted">Тяжёлая тема: части можно проходить по отдельности.</p>}
           {!available.has(day) && <p class="small muted">Пока в работе.</p>}
           {available.has(day) && (
             <p class="small muted" data-progress-items={itemIds(day)} hidden />
@@ -71,9 +72,9 @@ const jsonLd = {
     <div class="prose">
       <h2>Что останется после курса</h2>
       <ul>
-        <li>Чек-листы: «Мне 14–17» и «Мы уже пара».</li>
+        <li>Чек-листы: «Начинаю с себя» и «Делаем вместе».</li>
         <li>Памятки, которые можно распечатать.</li>
-        <li>Своя семейная конституция: ценности, правила и то, что не повторяем.</li>
+        <li>Своя семейная конституция: миссия, ценности, правила, деньги и традиции.</li>
       </ul>
       <p>
         Курс строится на союзе мужчины и женщины и их детях. Это ценность автора. Подробнее —

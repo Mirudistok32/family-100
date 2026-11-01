@@ -7,8 +7,16 @@ export const AUDIT_NOTE_ID = 'd6-means-task-audit';
 export const CAPITALS = ['human', 'intellectual', 'social', 'financial'] as const;
 export type Capital = (typeof CAPITALS)[number];
 
-export const AUDIENCES = ['teen', 'couple'] as const;
+export const AUDIENCES = ['self', 'couple'] as const;
 export type Audience = (typeof AUDIENCES)[number];
+
+/** Старые ответы лежали под аудиторией `teen` и вопросами `teen-*`: читаем их как `self`, чтобы не потерять. */
+const LEGACY_AUDIENCE = 'teen';
+const LEGACY_PREFIX = 'teen-';
+
+function migrateAnswerId(id: string): string {
+  return id.startsWith(LEGACY_PREFIX) ? `self-${id.slice(LEGACY_PREFIX.length)}` : id;
+}
 
 /** Ответ на утверждение: 0 — пока нет, 1 — отчасти, 2 — да. */
 export const ANSWER_VALUES = [0, 1, 2] as const;
@@ -57,16 +65,20 @@ export function parseAudit(raw: string, questions: readonly AuditQuestion[]): Au
   }
   if (typeof data !== 'object' || data === null) return emptyAudit();
   const { audience, answers } = data as Record<string, unknown>;
-  const stored =
+  const stored: Record<string, unknown> =
     typeof answers === 'object' && answers !== null && !Array.isArray(answers)
-      ? (answers as Record<string, unknown>)
+      ? Object.fromEntries(
+          Object.entries(answers).map(([id, value]) => [migrateAnswerId(id), value] as const),
+        )
       : {};
   const entries = questions.flatMap(({ id }): [string, Answer][] => {
     const value = Object.hasOwn(stored, id) ? stored[id] : undefined;
     return isAnswer(value) ? [[id, value]] : [];
   });
   const audit: Audit = { answers: Object.fromEntries(entries) };
-  const known = AUDIENCES.find((item) => item === audience);
+  const known = AUDIENCES.find(
+    (item) => item === (audience === LEGACY_AUDIENCE ? 'self' : audience),
+  );
   if (known) audit.audience = known;
   return audit;
 }

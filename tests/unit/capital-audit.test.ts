@@ -17,14 +17,14 @@ import {
 import { normalizeNotes } from '@/domain/notes';
 
 const QUESTIONS: AuditQuestion[] = [
-  { id: 'a1', audience: 'teen', capital: 'human' },
-  { id: 'a2', audience: 'teen', capital: 'human' },
-  { id: 'b1', audience: 'teen', capital: 'financial' },
+  { id: 'a1', audience: 'self', capital: 'human' },
+  { id: 'a2', audience: 'self', capital: 'human' },
+  { id: 'b1', audience: 'self', capital: 'financial' },
   { id: 'c1', audience: 'couple', capital: 'human' },
 ];
 
 function audit(answers: Audit['answers']): Audit {
-  return { audience: 'teen', answers };
+  return { audience: 'self', answers };
 }
 
 function score(answers: Audit['answers'], capital = 'human') {
@@ -32,6 +32,23 @@ function score(answers: Audit['answers'], capital = 'human') {
 }
 
 describe('parseAudit', () => {
+  it('миграция: старая аудитория и старые вопросы читаются как новые', () => {
+    const questions: AuditQuestion[] = [
+      { id: 'self-save', audience: 'self', capital: 'financial' },
+    ];
+    const raw = '{"audience":"teen","answers":{"teen-save":1,"teen-unknown":2}}';
+    expect(parseAudit(raw, questions)).toEqual({ audience: 'self', answers: { 'self-save': 1 } });
+  });
+
+  it('миграция: настоящие вопросы teen-* находят пару среди новых', () => {
+    const raw = '{"audience":"teen","answers":{"teen-track":2,"teen-adult":1,"teen-community":0}}';
+    expect(parseAudit(raw, AUDIT_STATEMENTS).answers).toEqual({
+      'self-track': 2,
+      'self-adult': 1,
+      'self-community': 0,
+    });
+  });
+
   it('возвращает сохранённое', () => {
     const saved = serializeAudit(audit({ a1: 2, b1: 0 }));
     expect(parseAudit(saved, QUESTIONS)).toEqual(audit({ a1: 2, b1: 0 }));
@@ -78,7 +95,7 @@ describe('setAnswer и setAudience', () => {
   it('не меняют исходный аудит', () => {
     const before = emptyAudit();
     setAnswer(before, 'a1', 2);
-    setAudience(before, 'teen');
+    setAudience(before, 'self');
     expect(before).toEqual(emptyAudit());
   });
 
@@ -120,11 +137,11 @@ describe('scoreAudit', () => {
 
   it('границы уровней на реальных вопросах: 2 из 6 ещё начало, 5 из 6 уже опора', () => {
     const [first, second, third] = AUDIT_STATEMENTS.filter(
-      (item) => item.audience === 'teen' && item.capital === 'human',
+      (item) => item.audience === 'self' && item.capital === 'human',
     ).map((item) => item.id);
     const human = (a: 0 | 1 | 2, b: 0 | 1 | 2, c: 0 | 1 | 2) =>
       scoreAudit(
-        { audience: 'teen', answers: { [first ?? '']: a, [second ?? '']: b, [third ?? '']: c } },
+        { audience: 'self', answers: { [first ?? '']: a, [second ?? '']: b, [third ?? '']: c } },
         AUDIT_STATEMENTS,
       )[0]?.level;
     expect(human(1, 1, 0)).toBe('start');

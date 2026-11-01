@@ -52,7 +52,7 @@ const inConstitution = new Set(CONSTITUTION_SECTIONS.map((section) => section.no
           return (
             <section class="note-group" aria-labelledby={`notes-${data.task.id}`}>
               <h3 id={`notes-${data.task.id}`}>
-                <a href={lessonHref(data.day, data.part)}>
+                <a href={lessonHref(data.day)}>
                   День {data.day}. {data.title}
                 </a>
               </h3>

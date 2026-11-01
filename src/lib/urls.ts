@@ -5,6 +5,6 @@ export function href(path: string): string {
   return `${base}${path}`;
 }
 
-export function lessonHref(day: number, part?: string): string {
-  return href(part ? `/day/${day}/${part}/` : `/day/${day}/`);
+export function lessonHref(day: number): string {
+  return href(`/day/${day}/`);
 }

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   checkContent,
+  findBannedTopic,
   findGenderedForm,
   findUnsafeWord,
   type LessonInput,
@@ -39,8 +40,8 @@ const lesson = (over: Partial<LessonInput['data']> = {}, body = BODY): LessonInp
     goal: 'Цель',
     question: 'Вопрос?',
     minutes: 25,
-    teen: [{ id: 't-1', text: 'Пункт' }],
-    couple: [{ id: 'c-1', text: 'Пункт' }],
+    self: [{ id: 't-1', text: 'Пункт' }],
+    together: [{ id: 'c-1', text: 'Пункт' }],
     task: { id: 'task-1', text: 'Задание', fields: [{ id: 'f-1', label: 'Поле' }] },
     thinkers: ['Аристотель'],
     memo: 'memo-1',
@@ -63,8 +64,8 @@ describe('checkContent', () => {
       [
         lesson(),
         lesson({
-          teen: [{ id: 't-2', text: 'Пункт' }],
-          couple: [{ id: 'c-2', text: 'Пункт' }],
+          self: [{ id: 't-2', text: 'Пункт' }],
+          together: [{ id: 'c-2', text: 'Пункт' }],
           task: { id: 'task-2', text: 'Задание' },
         }),
       ],
@@ -76,7 +77,7 @@ describe('checkContent', () => {
   it('повтор id пункта чек-листа между днями не проходит', () => {
     const second = lesson({
       id: 'day-2',
-      couple: [{ id: 'c-2', text: 'Пункт' }],
+      together: [{ id: 'c-2', text: 'Пункт' }],
       task: { id: 'task-2', text: 'Задание' },
     });
     expect(checkContent([lesson(), second], [memo()]).join()).toContain('повтор id «t-1»');
@@ -112,7 +113,7 @@ describe('checkContent', () => {
 
   it('родовая форма про читателя в чек-листе', () => {
     const errors = checkContent(
-      [lesson({ teen: [{ id: 't-1', text: 'Ты готов поговорить' }] })],
+      [lesson({ self: [{ id: 't-1', text: 'Ты готов поговорить' }] })],
       [memo()],
     );
     expect(errors.join()).toContain('родовая форма');
@@ -185,5 +186,39 @@ describe('splitSections', () => {
     const sections = splitSections('до\n## А\nтекст а\n### Подзаголовок\n## Б\nтекст б');
     expect(sections.map((section) => section.title)).toEqual(['', 'А', 'Б']);
     expect(sections[1]?.text).toContain('### Подзаголовок');
+  });
+});
+
+describe('findBannedTopic', () => {
+  it.each([
+    'Если тебе 14–17, скажи',
+    'подросток в семье',
+    'Для школьников',
+    'поговори с психологом',
+    'это насилие',
+    'если дома опасно',
+    'о безопасности',
+    'вызови полицию',
+    'зависимость и алкоголь',
+    'Лёша пришёл',
+  ])('находит «%s»', (text) => {
+    expect(findBannedTopic(text)).toBeDefined();
+  });
+
+  it.each([
+    'Богатство семьи — это прежде всего люди.',
+    'Школа жизни и учительница.',
+    'Независимость растёт с годами.',
+    'Наставник и старший.',
+    'Финансовая подушка на 3–6 месяцев.',
+  ])('не трогает «%s»', (text) => {
+    expect(findBannedTopic(text)).toBeUndefined();
+  });
+
+  it('урок и памятка с такой темой не проходят проверку', () => {
+    const body = `${BODY}\nЕсли дома опасно, скажи.`;
+    expect(checkContent([lesson({}, body)], [memo()]).join()).toContain('тема не из этого курса');
+    const bad: MemoInput = { ...memo(), body: 'Поговори с психологом.' };
+    expect(checkContent([lesson()], [bad]).join()).toContain('тема не из этого курса');
   });
 });

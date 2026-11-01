@@ -1,11 +1,11 @@
 // Семейная конституция: сборка документа из записей. Без DOM и хранилища.
-// Своего ключа нет: части лежат в записях заданий, часть из них общая с днями 5 и 7 (docs/save-format.md).
+// Своего ключа нет: части лежат в записях заданий, часть из них общая с днями 2 и 3 (docs/save-format.md).
 import { type Audience, AUDIENCES } from '@/domain/capital-audit';
 
-/** Выбранная версия лежит в записях под этим постоянным id, значение — `teen` или `couple`. */
+/** Выбранная версия лежит в записях под этим постоянным id, значение — `self` или `couple`. Старое `teen` читается как `self`. */
 export const VERSION_NOTE_ID = 'constitution-version';
 
-export const DEFAULT_VERSION: Audience = 'teen';
+export const DEFAULT_VERSION: Audience = 'self';
 
 export interface ConstitutionSection {
   /** Постоянный id записи. Менять нельзя: это данные пользователя. */

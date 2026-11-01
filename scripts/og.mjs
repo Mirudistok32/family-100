@@ -18,7 +18,7 @@ body{margin:0;width:1200px;height:630px;background:#f5eddc;color:#2a1f16;font-fa
 .h{font-family:C;font-size:50px;font-weight:600;color:#8c3a22;margin:0 0 8px}
 h1{font-size:96px;line-height:1.05;font-weight:600;margin:0 0 28px}
 p{font-size:36px;line-height:1.35;margin:0;color:#5c4a39}
-</style><div class="card"><div class="h">семь дней, один альбом</div><h1>Семья на 100 лет</h1><p>Зачем нужна семья, как её создать и как растить её силу</p></div>`;
+</style><div class="card"><div class="h">семь дней, один альбом</div><h1>Семья на 100 лет</h1><p>Люди, знания, связи и деньги семьи на сто лет вперёд</p></div>`;
 
 const browser = await chromium.launch({ channel: 'chrome' });
 const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });

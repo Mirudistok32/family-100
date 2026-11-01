@@ -6,7 +6,7 @@ const DAY = `${BASE}/day/1/`;
 
 test('отметка переживает перезагрузку', async ({ page }) => {
   await page.goto(DAY);
-  const box = page.locator('input[data-item-id="d1-teen-1"]');
+  const box = page.locator('input[data-item-id="d1-self-1"]');
   await box.check();
   await page.reload();
   await expect(box).toBeChecked();
@@ -17,7 +17,7 @@ test('отметка переживает перезагрузку', async ({ pa
 
 test('чек-лист отмечается с клавиатуры', async ({ page }) => {
   await page.goto(DAY);
-  const box = page.locator('input[data-item-id="d1-teen-1"]');
+  const box = page.locator('input[data-item-id="d1-self-1"]');
   await box.focus();
   await page.keyboard.press('Space');
   await expect(box).toBeChecked();
@@ -28,7 +28,7 @@ test('главная предлагает продолжить и показыв
   await expect(page.locator('[data-resume]')).toBeHidden();
 
   await page.goto(DAY);
-  await page.locator('input[data-item-id="d1-teen-1"]').check();
+  await page.locator('input[data-item-id="d1-self-1"]').check();
   await page.goto(`${BASE}/`);
 
   const resume = page.locator('[data-resume]');
@@ -45,8 +45,8 @@ test('другая вкладка подхватывает отметку', asyn
   const second = await context.newPage();
   await first.goto(DAY);
   await second.goto(DAY);
-  await first.locator('input[data-item-id="d1-teen-1"]').check();
-  await expect(second.locator('input[data-item-id="d1-teen-1"]')).toBeChecked();
+  await first.locator('input[data-item-id="d1-self-1"]').check();
+  await expect(second.locator('input[data-item-id="d1-self-1"]')).toBeChecked();
 });
 
 test('ошибка записи показывает сообщение и не снимает отметку', async ({ page }) => {
@@ -56,7 +56,7 @@ test('ошибка записи показывает сообщение и не 
     };
   });
   await page.goto(DAY);
-  const box = page.locator('input[data-item-id="d1-teen-1"]');
+  const box = page.locator('input[data-item-id="d1-self-1"]');
   await box.check();
   await expect(box).toBeChecked();
   await expect(page.locator('[data-save-problem]')).toBeVisible();
@@ -68,7 +68,7 @@ test('испорченное хранилище не ломает страниц
       'family100:progress:v1',
       JSON.stringify({
         schemaVersion: 1,
-        checked: ['d1-teen-1'],
+        checked: ['d1-self-1'],
         last: { id: 'day-1', title: '<img src=x onerror=alert(1)>', path: 'javascript:alert(1)' },
       }),
     );

@@ -26,15 +26,15 @@ const SECTIONS: ConstitutionSection[] = [
     noteId: 'a',
     label: 'А',
     sensitive: false,
-    titles: { teen: 'Моё А', couple: 'Наше А' },
-    prompts: { teen: 'а?', couple: 'а?' },
+    titles: { self: 'Моё А', couple: 'Наше А' },
+    prompts: { self: 'а?', couple: 'а?' },
   },
   {
     noteId: 'b',
     label: 'Б',
     sensitive: true,
-    titles: { teen: 'Моё Б', couple: 'Наше Б' },
-    prompts: { teen: 'б?', couple: 'б?' },
+    titles: { self: 'Моё Б', couple: 'Наше Б' },
+    prompts: { self: 'б?', couple: 'б?' },
   },
 ];
 
@@ -44,7 +44,8 @@ function sheet(text: string): ConstitutionDocument {
 
 describe('версия', () => {
   it('читает известные значения', () => {
-    expect(parseVersion('teen')).toBe('teen');
+    expect(parseVersion('self')).toBe('self');
+    expect(parseVersion('teen')).toBe('self');
     expect(parseVersion('couple')).toBe('couple');
   });
 
@@ -67,7 +68,7 @@ describe('сборка документа', () => {
 
   it('пропускает пустые части и части из одних пробелов', () => {
     const texts: Record<string, string> = { a: ' \n ', b: '  текст  ' };
-    const { sections } = buildDocument(SECTIONS, (id) => texts[id] ?? '', 'teen');
+    const { sections } = buildDocument(SECTIONS, (id) => texts[id] ?? '', 'self');
     expect(sections).toEqual([{ noteId: 'b', title: 'Моё Б', text: 'текст' }]);
   });
 });
@@ -127,9 +128,8 @@ describe('данные конструктора', () => {
 
   it('общие записи есть в уроках с тем же признаком чувствительности', async () => {
     const shared: [string, string, boolean][] = [
-      ['d7-task-mission', 'day-7.md', false],
-      ['d7-task-tradition', 'day-7.md', false],
-      ['d5-first-generation-task-rules', 'day-5-first-generation.md', true],
+      ['d7-task-mission', 'day-2.md', false],
+      ['d7-task-tradition', 'day-3.md', false],
     ];
     for (const [noteId, file, sensitive] of shared) {
       const source = await readFile(join(process.cwd(), `src/content/lessons/${file}`), 'utf8');

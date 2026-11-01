@@ -1,65 +1,30 @@
 ---
 import DayPager from '@/components/DayPager.astro';
-import DayUnderReview from '@/components/DayUnderReview.astro';
-import HeavyNotice from '@/components/HeavyNotice.astro';
 import LessonView from '@/components/LessonView.astro';
 import { DAYS } from '@/data/days';
-import { daysWithPages } from '@/domain/visibility';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { visibleLessons } from '@/lib/lessons';
-import { lessonHref } from '@/lib/urls';
 
 export async function getStaticPaths() {
   const lessons = await visibleLessons();
-  const days = [...new Set(lessons.map((lesson) => lesson.data.day))];
-  const withPages = daysWithPages(DAYS, days);
-  return withPages.map((day) => ({
-    params: { day: String(day) },
-    props: {
-      day,
-      available: withPages,
-      lessons: lessons.filter((lesson) => lesson.data.day === day),
-    },
+  const available = lessons.map((lesson) => lesson.data.day);
+  return lessons.map((lesson) => ({
+    params: { day: String(lesson.data.day) },
+    props: { lesson, available },
   }));
 }
 
-const { day, available, lessons } = Astro.props;
+const { lesson, available } = Astro.props;
+const { day } = lesson.data;
 const meta = DAYS.find((item) => item.day === day);
-const single = lessons.length === 1 && !lessons[0]?.data.part ? lessons[0] : undefined;
-const title = meta?.title ?? `День ${day}`;
 ---
 
 <BaseLayout
-  title={`День ${day}. ${title}`}
-  description={meta?.summary ?? title}
-  heavy={meta?.heavy ?? false}
+  title={`День ${day}. ${lesson.data.title}`}
+  description={meta?.summary ?? lesson.data.goal}
 >
   <div class="wrap">
-    {lessons.length === 0 ? (
-      <DayUnderReview day={day} title={title} />
-    ) : single ? (
-      <LessonView lesson={single} label={`День ${day}`} />
-    ) : (
-      <div class="prose">
-        <p class="hand">День {day}</p>
-        <h1>{title}</h1>
-        <p>{meta?.summary}</p>
-        {meta?.heavy && (
-          <>
-            <HeavyNotice topic={meta.title.toLowerCase()} />
-            <p>Части можно проходить по отдельности и в любом порядке.</p>
-          </>
-        )}
-        <ol class="part-list">
-          {lessons.map((lesson) => (
-            <li>
-              <a href={lessonHref(day, lesson.data.part)}>{lesson.data.title}</a>
-              <span class="muted"> · {lesson.data.minutes} минут</span>
-            </li>
-          ))}
-        </ol>
-      </div>
-    )}
+    <LessonView lesson={lesson} label={`День ${day}`} />
     <DayPager day={day} available={available} />
   </div>
 </BaseLayout>

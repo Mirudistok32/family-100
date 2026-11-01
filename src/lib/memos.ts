@@ -16,7 +16,6 @@ export async function visibleMemos(): Promise<VisibleMemo[]> {
     lessons.map((lesson) => ({
       memoId: lesson.data.memo.id,
       day: lesson.data.day,
-      order: lesson.data.order,
       lesson,
     })),
     memos.map((memo) => memo.id),

@@ -3,6 +3,8 @@ import { readdirSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
+import { findBannedTopic } from '../../src/domain/content-rules.ts';
+
 // Аудит качества (пункт 5.2) по всем собранным страницам. Список берём из dist,
 // поэтому новая страница не выпадет из проверки. Перед запуском нужна сборка.
 const ROUTES = readdirSync('dist', { recursive: true, encoding: 'utf8' })
@@ -14,9 +16,8 @@ const ROUTES = readdirSync('dist', { recursive: true, encoding: 'utf8' })
 const KEYBOARD_ROUTES = [
   '/family-100/',
   '/family-100/day/1/',
-  '/family-100/day/5/abuse/',
-  '/family-100/day/5/distance/',
-  '/family-100/day/6/means/',
+  '/family-100/day/4/',
+  '/family-100/day/5/',
   '/family-100/my-family/',
   '/family-100/memos/',
   '/family-100/ethics/',
@@ -122,6 +123,14 @@ for (const route of KEYBOARD_ROUTES) {
 }
 
 for (const route of ROUTES) {
+  test(`${route}: нет тем, которых в курсе быть не должно`, async ({ page }, info) => {
+    test.skip(info.project.name !== 'desktop', 'текст не зависит от размера экрана');
+    await page.goto(route);
+    const text = await page.locator('body').innerText();
+    const description = await page.locator('meta[name="description"]').getAttribute('content');
+    expect(findBannedTopic(`${text}\n${description ?? ''}`)).toBeUndefined();
+  });
+
   test(`${route}: в тексте нет двойной точки и двойной запятой`, async ({ page }, info) => {
     test.skip(info.project.name !== 'desktop', 'текст не зависит от размера экрана');
     await page.goto(route);

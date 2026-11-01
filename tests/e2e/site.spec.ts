@@ -10,13 +10,7 @@ const PAGES = [
   `${BASE}/day/3/`,
   `${BASE}/day/4/`,
   `${BASE}/day/5/`,
-  `${BASE}/day/5/addiction/`,
-  `${BASE}/day/5/abuse/`,
-  `${BASE}/day/5/distance/`,
-  `${BASE}/day/5/first-generation/`,
   `${BASE}/day/6/`,
-  `${BASE}/day/6/people/`,
-  `${BASE}/day/6/means/`,
   `${BASE}/day/7/`,
   `${BASE}/my-family/`,
   `${BASE}/ethics/`,
@@ -48,7 +42,7 @@ test('с клавиатуры: сначала ссылка «К содержан
 
 test('с клавиатуры можно перейти с главной на день 1', async ({ page }) => {
   await page.goto(`${BASE}/`);
-  await page.getByRole('link', { name: 'Зачем нужна семья' }).focus();
+  await page.getByRole('link', { name: 'Богатство семьи и горизонт 100 лет' }).focus();
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(new RegExp(`${BASE}/day/1/$`));
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
@@ -61,7 +55,7 @@ test('весь текст урока виден без JavaScript', async ({ bro
   await expect(page.getByRole('heading', { name: 'История' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Пример из жизни' })).toBeVisible();
   await expect(page.getByText('Герои придуманы, ситуации типичные.')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Мне 14–17' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Начинаю с себя' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Источники' })).toBeVisible();
   await context.close();
 });
@@ -97,19 +91,11 @@ test('перед ссылкой, перенесённой на новую стр
   await expect(page.locator('footer')).toContainText('не отправляются. О курсе и приватности');
 });
 
-test('возрастной знак 16+ есть в подвале и объяснён на странице о курсе', async ({ page }) => {
+test('возрастной знак 16+ есть в подвале', async ({ page }) => {
   for (const path of [`${BASE}/`, `${BASE}/day/1/`, `${BASE}/about/`]) {
     await page.goto(path);
     await expect(page.locator('footer')).toContainText('16+');
   }
-
-  await page.locator('footer').getByRole('link', { name: 'если тебе меньше 16' }).click();
-  await expect(page).toHaveURL(new RegExp(`${BASE}/about/#age$`));
-
-  const heading = page.getByRole('heading', { level: 2, name: 'Почему на сайте знак 16+' });
-  await expect(heading).toBeInViewport();
-  const main = page.locator('main');
-  await expect(main).toContainText('вместе со взрослым, которому доверяешь');
 });
 
 test('картинка для соцсетей на месте', async ({ request }) => {
@@ -131,81 +117,57 @@ test('нет ошибок консоли на главной и уроке, CSP 
 });
 
 test('внутренняя ссылка из текста урока ведёт на страницу в подпапке сайта', async ({ page }) => {
-  await page.goto(`${BASE}/day/1/`);
-  await page.locator('.block--essence').getByRole('link', { name: 'день 5' }).click();
-  await expect(page).toHaveURL(new RegExp(`${BASE}/day/5/$`));
-});
-
-test('часть о зависимости: быстрый выход, помощь, чужая вина и шаги для школьника', async ({
-  page,
-}) => {
-  await page.goto(`${BASE}/day/5/addiction/`);
-  await expect(page.getByRole('link', { name: 'Быстрый выход' })).toBeVisible();
-  await expect(page.getByRole('complementary', { name: 'Предупреждение о теме' })).toBeVisible();
-  const essence = page.locator('.block--essence');
-  await expect(essence).toContainText('Если тебе 14–17');
-  await expect(essence).toContainText('Если тебе уже есть 18');
-  await expect(essence).toContainText('Это не диагноз');
-  await expect(essence).toContainText('Не отбирай, не выливай и не прячь');
-  await expect(page.getByRole('listitem').filter({ hasText: 'я не могу вылечить' })).toBeVisible();
-});
-
-test('часть о насилии: признаки без диагнозов и без отметок, ведут на помощь', async ({ page }) => {
-  await page.goto(`${BASE}/day/5/abuse/`);
-  await expect(page.getByRole('link', { name: 'Быстрый выход' })).toBeVisible();
-  const essence = page.locator('.block--essence');
-  await expect(essence).toContainText('Что не норма');
-  await expect(essence).toContainText('Это названия поступков, а не диагноз человеку');
-  await expect(essence).not.toContainText(/абьюзер|психопат|тиран/i);
-  await expect(essence.getByRole('checkbox')).toHaveCount(0);
-  await expect(essence).toContainText('Если тебе уже есть 18: план безопасности');
-  await expect(page.getByText('поэтому отмечать необязательно')).toBeVisible();
-  await expect(page.getByText('уход бывает самым опасным моментом').first()).toBeVisible();
-});
-
-test('вход в день 5 предупреждает о теме и даёт выбрать часть', async ({ page }) => {
   await page.goto(`${BASE}/day/5/`);
-  await expect(page.getByRole('link', { name: 'Быстрый выход' })).toBeVisible();
-  await expect(page.getByRole('complementary', { name: 'Предупреждение о теме' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Алкоголь и наркомания' })).toBeVisible();
+  await page.getByRole('link', { name: 'первого дня' }).click();
+  await expect(page).toHaveURL(new RegExp(`${BASE}/day/1/$`));
 });
 
-test('день 4 отделяет ссору от насилия и ведёт к дню 5 и к помощи', async ({ page }) => {
-  await page.goto(`${BASE}/day/4/`);
-  const essence = page.locator('.block--essence');
-  await expect(essence).toContainText('Сначала отличи ссору от насилия');
-  await expect(essence).toContainText('В чужой зависимости и чужом насилии твоей вины нет');
+test('дни идут по оглавлению книги: на главной видны части и все семь тем', async ({ page }) => {
+  await page.goto(`${BASE}/`);
+  const days = page.locator('.day-list');
+  for (const text of [
+    'философия',
+    'семейные практики',
+    'роли и ответственность',
+    'Миссия семьи',
+    'Ритуалы и традиции',
+    'Баланс и отчёт семьи',
+    'Семейный банк',
+    'Роли и наставники',
+    'Следующее поколение',
+  ]) {
+    await expect(days).toContainText(text);
+  }
+  await expect(page.locator('main')).toContainText('«Богатство семьи»');
+});
+
+test('день 1 говорит, что деньги служат людям, и что свою семью строишь ты', async ({ page }) => {
+  await page.goto(`${BASE}/day/1/`);
+  await expect(page.locator('.block--essence')).toContainText(
+    'Богатство семьи — это прежде всего люди',
+  );
   await expect(
-    essence.locator('strong', { hasText: 'Твою будущую семью строишь ты' }),
+    page.locator('.block--essence').locator('strong', { hasText: 'Твою семью строишь ты' }),
   ).toBeVisible();
-  await essence.getByRole('link', { name: 'день 5' }).click();
-  await expect(page).toHaveURL(new RegExp(`${BASE}/day/5/$`));
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Когда в семье беда');
 });
 
-test('день 3 называет предание преданием и ведёт от тревожных признаков к помощи', async ({
-  page,
-}) => {
+test('день 3 называет предание преданием', async ({ page }) => {
   await page.goto(`${BASE}/day/3/`);
-  await expect(page.getByText('предание, а не биография')).toBeVisible();
-  const essence = page.locator('.block--essence');
-  await expect(essence).toContainText('Тревожные признаки');
-  await expect(essence).toContainText('В чужой зависимости и чужом насилии твоей вины нет');
-  await expect(
-    essence.locator('strong', { hasText: 'твою будущую семью строишь ты' }),
-  ).toBeVisible();
-  await essence.getByRole('link', { name: 'день 5' }).click();
-  await expect(page).toHaveURL(new RegExp(`${BASE}/day/5/$`));
+  await expect(page.getByText('Это предание, а не биография')).toBeVisible();
 });
 
-test('день 2 прямо говорит ребёнку из любой семьи, что свою семью строит он', async ({ page }) => {
+test('день 4 подключает аудит капиталов, а день 2 ведёт к конституции', async ({ page }) => {
+  await page.goto(`${BASE}/day/4/`);
+  await expect(page.locator('[data-audit]')).toBeVisible();
   await page.goto(`${BASE}/day/2/`);
+  await page.getByRole('link', { name: 'Собрать семейную конституцию целиком' }).click();
+  await expect(page).toHaveURL(new RegExp(`${BASE}/my-family/#constitution$`));
+});
+
+test('день 6 перечисляет формы семьи без оценки и ведёт к памяткам', async ({ page }) => {
+  await page.goto(`${BASE}/day/6/`);
   const essence = page.locator('.block--essence');
-  await expect(essence).toContainText('с тобой всё в порядке');
-  await expect(
-    essence.locator('strong', { hasText: 'твою будущую семью строишь ты' }),
-  ).toBeVisible();
-  for (const form of ['С одним родителем', 'С отчимом или мачехой', 'Приёмная', 'Без детей']) {
+  for (const form of ['с одним родителем', 'с отчимом или мачехой', 'приёмная', 'без детей']) {
     await expect(essence).toContainText(form);
   }
   await expect(page.getByRole('link', { name: 'Памятки' })).toBeVisible();

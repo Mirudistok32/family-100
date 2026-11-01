@@ -25,8 +25,8 @@ export interface LessonInput {
     goal?: string;
     question?: string;
     minutes?: number;
-    teen?: ChecklistItem[];
-    couple?: ChecklistItem[];
+    self?: ChecklistItem[];
+    together?: ChecklistItem[];
     task?: { id?: string; text?: string; fields?: TaskField[] };
     memo?: string;
     sources?: { title?: string; url?: string }[];
@@ -57,6 +57,11 @@ const UNSAFE_WORDS: RegExp[] = [
   /(?<![а-яё])доз(?:а|у|ы|е|ой|ами|ах)?(?![а-яё])/iu,
   /(?<![а-яё])(?:повеситься|повесился|повесилась|вскрыть вены|передозировк[а-яё]*)(?![а-яё])/iu,
 ];
+
+// Этих тем в курсе нет совсем (решение автора, 01.11.2026): ни подростков, ни опасности, ни насилия, ни психологов.
+// Тем же списком e2e проверяет текст всех собранных страниц.
+const BANNED_TOPICS: RegExp =
+  /(?<![а-яё])(?:подрост|школьник|психолог|психотерап|насили|абьюз|побо[ий]|обидчик|кризисн|(?:без)?опасн|полици|алкогол|наркот|наркоман|зависимост|созавис|самоубий|самоповрежд|пьян|пьёт|бьёт|бьют|угроз|лёш)[а-яё]*|14[–-]17/iu;
 
 export interface Section {
   title: string;
@@ -93,13 +98,17 @@ export function findUnsafeWord(text: string): string | undefined {
   return undefined;
 }
 
+export function findBannedTopic(text: string): string | undefined {
+  return BANNED_TOPICS.exec(text)?.[0];
+}
+
 function readerFacingTexts(lesson: LessonInput): string[] {
-  const { goal, question, teen, couple, task } = lesson.data;
+  const { goal, question, self, together, task } = lesson.data;
   return [
     goal ?? '',
     question ?? '',
-    ...(teen ?? []).map((item) => item.text),
-    ...(couple ?? []).map((item) => item.text),
+    ...(self ?? []).map((item) => item.text),
+    ...(together ?? []).map((item) => item.text),
     task?.text ?? '',
     ...(task?.fields ?? []).map((field) => field.label),
     ...splitSections(lesson.body)
@@ -131,6 +140,8 @@ export function checkContent(lessons: LessonInput[], memos: MemoInput[]): string
     if (gendered) errors.push(`${memo.file}: родовая форма про читателя: «${gendered}»`);
     const unsafe = findUnsafeWord(memo.body);
     if (unsafe) errors.push(`${memo.file}: запрещённое слово: «${unsafe}»`);
+    const banned = findBannedTopic(`${memo.data.title ?? ''}\n${memo.body}`);
+    if (banned) errors.push(`${memo.file}: тема не из этого курса: «${banned}»`);
   }
   const memoIds = new Set(memos.map((memo) => memo.data.id));
 
@@ -170,8 +181,8 @@ export function checkContent(lessons: LessonInput[], memos: MemoInput[]): string
     }
 
     for (const [list, name] of [
-      [data.teen, 'чек-лист «Мне 14–17»'],
-      [data.couple, 'чек-лист «Мы уже пара»'],
+      [data.self, 'чек-лист «Начинаю с себя»'],
+      [data.together, 'чек-лист «Делаем вместе»'],
     ] as const) {
       if (!list?.length) errors.push(`${file}: пустой ${name}`);
       for (const item of list ?? []) claim(item.id, name, file);
@@ -190,6 +201,8 @@ export function checkContent(lessons: LessonInput[], memos: MemoInput[]): string
     }
     const unsafe = findUnsafeWord(`${JSON.stringify(data)}\n${body}`);
     if (unsafe) errors.push(`${file}: запрещённое слово: «${unsafe}»`);
+    const banned = findBannedTopic(`${JSON.stringify(data)}\n${body}`);
+    if (banned) errors.push(`${file}: тема не из этого курса: «${banned}»`);
   }
 
   return errors;

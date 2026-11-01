@@ -10,20 +10,20 @@ import { DEFAULT_VERSION } from '@/domain/constitution';
   <div class="no-print">
     <h2 id="constitution">Семейная конституция</h2>
     <p>
-      Короткий текст о том, какой будет твоя семья: на одном-двух листах, чтобы можно было
-      распечатать. Заполняй части в любом порядке, пустые на лист не попадут.
+      Короткий текст о том, какая у тебя семья: на одном-двух листах, чтобы можно было распечатать.
+      Заполняй части в любом порядке, пустые на лист не попадут.
     </p>
     <aside class="callout callout--calm" aria-label="Что это за документ">
       <p>
-        Это не закон и не брачный договор, а договорённость. Никакая конституция не обязывает
-        оставаться рядом с насилием. Если дома опасно, сначала скажи взрослому, которому доверяешь.
+        Это не закон и не брачный договор, а договорённость. Раз в год её стоит перечитать и
+        поправить.
       </p>
     </aside>
 
-    <fieldset class="situation__group" data-needs-js hidden>
+    <fieldset class="choice__group" data-needs-js hidden>
       <legend>{VERSION_QUESTION}</legend>
       {AUDIENCES.map((version) => (
-        <label class="situation__option">
+        <label class="choice__option">
           <input
             type="radio"
             name="constitution-version"

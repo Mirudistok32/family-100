@@ -58,7 +58,7 @@ test('сохранение чувствительного поля включа�
 
 test('экспорт отдаёт файл с записями и отметками', async ({ page }) => {
   await page.goto(DAY);
-  await page.locator('input[data-item-id="d1-teen-1"]').check();
+  await page.locator('input[data-item-id="d1-self-1"]').check();
   await page.locator(NOTE).fill('Бабушка');
   await page.goto(PAGE);
   const [download] = await Promise.all([
@@ -69,7 +69,7 @@ test('экспорт отдаёт файл с записями и отметка
   const path = await download.path();
   const backup = JSON.parse(await readFile(path, 'utf8'));
   expect(backup.format).toBe('family100-backup');
-  expect(backup.progress.checked).toContain('d1-teen-1');
+  expect(backup.progress.checked).toContain('d1-self-1');
   expect(backup.notes.fields['d1-task-circle']).toBe('Бабушка');
 });
 
@@ -81,7 +81,7 @@ test('импорт показывает предпросмотр и ничего
       format: 'family100-backup',
       version: 1,
       exportedAt: '2026-10-01T10:00:00.000Z',
-      progress: { schemaVersion: 1, checked: ['d1-teen-1'] },
+      progress: { schemaVersion: 1, checked: ['d1-self-1'] },
       notes: { schemaVersion: 1, fields: { 'd1-task-circle': 'новая запись' }, keep: [] },
     }),
   );
@@ -106,7 +106,7 @@ test('импорт после подтверждения заменяет дан
       format: 'family100-backup',
       version: 1,
       exportedAt: '2026-10-01T10:00:00.000Z',
-      progress: { schemaVersion: 1, checked: ['d1-teen-1'] },
+      progress: { schemaVersion: 1, checked: ['d1-self-1'] },
       notes: { schemaVersion: 1, fields: { 'd1-task-circle': 'новая запись' }, keep: [] },
     }),
   );
@@ -114,7 +114,7 @@ test('импорт после подтверждения заменяет дан
   await expect(page.locator(NOTE)).toHaveValue('новая запись');
   await expect(page.locator('[data-data-status]')).toContainText('восстановлены');
   await page.goto(DAY);
-  await expect(page.locator('input[data-item-id="d1-teen-1"]')).toBeChecked();
+  await expect(page.locator('input[data-item-id="d1-self-1"]')).toBeChecked();
   await expect(page.locator(NOTE)).toHaveValue('новая запись');
 });
 
@@ -160,7 +160,7 @@ test('файл не той формы отклоняется, разметка �
 
 test('«стереть всё» просит подтверждение и удаляет данные', async ({ page }) => {
   await page.goto(DAY);
-  await page.locator('input[data-item-id="d1-teen-1"]').check();
+  await page.locator('input[data-item-id="d1-self-1"]').check();
   await page.goto(PAGE);
   await page.locator(NOTE).fill('запись');
   await page.locator(SECRET).fill('несохранённая тайна');
@@ -185,7 +185,7 @@ test('«стереть всё» просит подтверждение и уд�
   expect(keys).toEqual([]);
 
   await page.goto(DAY);
-  await expect(page.locator('input[data-item-id="d1-teen-1"]')).not.toBeChecked();
+  await expect(page.locator('input[data-item-id="d1-self-1"]')).not.toBeChecked();
 });
 
 test('записи не уходят в сеть, запросов на чужие адреса нет', async ({ page, baseURL }) => {

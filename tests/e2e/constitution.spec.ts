@@ -3,18 +3,20 @@ import { expect, type Page, test } from '@playwright/test';
 
 const BASE = '/family-100';
 const RECORDS = `${BASE}/my-family/`;
-const DAY_7 = `${BASE}/day/7/`;
+const DAY_2 = `${BASE}/day/2/`;
+const DAY_3 = `${BASE}/day/3/`;
 const NOTES_KEY = 'family100:notes:v1';
 const SHEET = '[data-constitution-sheet]';
 
 const OPEN_NOTES = [
   'd7-task-mission',
   'constitution-values',
+  'd5-first-generation-task-rules',
   'constitution-decisions',
   'constitution-money',
   'd7-task-tradition',
 ];
-const SENSITIVE_NOTES = ['d5-first-generation-task-rules', 'constitution-not-repeat'];
+const SENSITIVE_NOTES = ['constitution-not-repeat'];
 const ALL_NOTES = [...OPEN_NOTES, ...SENSITIVE_NOTES];
 
 function field(page: Page, id: string) {
@@ -43,13 +45,13 @@ async function pdfPages(page: Page): Promise<number> {
 
 test('форма переживает перезагрузку и даёт документ на одном-двух листах A4', async ({ page }) => {
   await page.goto(RECORDS);
-  await page.getByRole('radio', { name: 'Мы уже пара' }).check();
+  await page.getByRole('radio', { name: 'Мы вместе' }).check();
   await fillAll(page, (id) => `Запись части ${id}: говорим прямо и без оскорблений.`);
   await expect.poll(() => savedNotes(page)).toContain('constitution-not-repeat');
 
   await page.reload();
 
-  await expect(page.getByRole('radio', { name: 'Мы уже пара' })).toBeChecked();
+  await expect(page.getByRole('radio', { name: 'Мы вместе' })).toBeChecked();
   const sheet = page.locator(SHEET);
   await expect(sheet.getByRole('heading', { name: 'Конституция нашей семьи' })).toBeVisible();
   for (const id of ALL_NOTES) await expect(sheet).toContainText(`Запись части ${id}`);
@@ -74,22 +76,22 @@ test('версия меняет вопросы и заголовки, а тек�
   await field(page, 'constitution-values').fill('Честность');
   const sheet = page.locator(SHEET);
   await expect(sheet.getByRole('heading', { name: 'Что для меня важнее всего' })).toBeVisible();
-  await expect(
-    sheet.getByRole('heading', { name: 'Конституция моей будущей семьи' }),
-  ).toBeVisible();
+  await expect(sheet.getByRole('heading', { name: 'Конституция моей семьи' })).toBeVisible();
 
-  await page.getByRole('radio', { name: 'Мы уже пара' }).check();
+  await page.getByRole('radio', { name: 'Мы вместе' }).check();
   await expect(prompts.getByText('Что для вас важнее')).toBeVisible();
   await expect(prompts.getByText('в твоём доме')).toBeHidden();
   await expect(sheet.getByRole('heading', { name: 'Что для нас важнее всего' })).toBeVisible();
   await expect(field(page, 'constitution-values')).toHaveValue('Честность');
 });
 
-test('миссия и традиция общие с днём 7', async ({ page }) => {
-  await page.goto(DAY_7);
-  await field(page, 'd7-task-mission').fill('Мы дом, куда хочется вернуться.');
+test('миссия общая с днём 2, традиция с днём 3', async ({ page }) => {
+  await page.goto(DAY_3);
   await field(page, 'd7-task-tradition').fill('Пельмени в первое воскресенье.');
   await expect.poll(() => savedNotes(page)).toContain('Пельмени');
+  await page.goto(DAY_2);
+  await field(page, 'd7-task-mission').fill('Мы дом, куда хочется вернуться.');
+  await expect.poll(() => savedNotes(page)).toContain('Мы дом');
 
   await page.getByRole('link', { name: 'Собрать семейную конституцию целиком' }).click();
   await expect(page).toHaveURL(/\/my-family\/#constitution$/);
@@ -100,12 +102,12 @@ test('миссия и традиция общие с днём 7', async ({ page 
 
   await field(page, 'd7-task-mission').fill('Мы дом и команда.');
   await expect.poll(() => savedNotes(page)).toContain('Мы дом и команда.');
-  await page.goto(DAY_7);
+  await page.goto(DAY_2);
   await expect(field(page, 'd7-task-mission')).toHaveValue('Мы дом и команда.');
 });
 
 test('чувствительная часть без согласия идёт на лист, но не в хранилище', async ({ page }) => {
-  const secret = 'Не повторю крики по вечерам.';
+  const secret = 'Не повторю молчание за ужином.';
   await page.goto(RECORDS);
   await field(page, 'constitution-not-repeat').fill(secret);
   await field(page, 'constitution-values').fill('Честность');
@@ -120,7 +122,7 @@ test('чувствительная часть без согласия идёт �
 });
 
 test('выключение сохранения стирает часть из хранилища', async ({ page }) => {
-  const secret = 'Не повторю крики по вечерам.';
+  const secret = 'Не повторю молчание за ужином.';
   await page.goto(RECORDS);
   await keep(page, 'constitution-not-repeat').check();
   await field(page, 'constitution-not-repeat').fill(secret);
@@ -183,7 +185,7 @@ test('кнопка печатает, а пустой лист не печата�
 
 test('стереть всё очищает лист и возвращает версию по умолчанию', async ({ page }) => {
   await page.goto(RECORDS);
-  await page.getByRole('radio', { name: 'Мы уже пара' }).check();
+  await page.getByRole('radio', { name: 'Мы вместе' }).check();
   await field(page, 'constitution-values').fill('Честность');
   await expect(page.locator(SHEET)).toContainText('Честность');
 
@@ -191,10 +193,10 @@ test('стереть всё очищает лист и возвращает ве
   await page.locator('[data-erase-confirm]').click();
   await expect(page.locator(SHEET)).toContainText('Пока здесь пусто');
   await expect(page.locator(SHEET)).not.toContainText('Честность');
-  await expect(page.getByRole('radio', { name: 'Мне 14–17: моя будущая семья' })).toBeChecked();
+  await expect(page.getByRole('radio', { name: 'Начинаю с себя: моя семья' })).toBeChecked();
 });
 
-test('поле каждой части есть на странице один раз, а день 7 ссылается на конструктор', async ({
+test('поле каждой части есть на странице один раз, а день 2 ссылается на конструктор', async ({
   page,
 }) => {
   await page.goto(RECORDS);
@@ -202,7 +204,7 @@ test('поле каждой части есть на странице один �
   await expect(field(page, 'd7-task-story')).toHaveCount(1);
   await expect(
     page
-      .locator('section.note-group', { hasText: 'День 7' })
+      .locator('section.note-group', { hasText: 'День 2' })
       .getByRole('link', { name: 'семейной конституции' }),
   ).toBeVisible();
 });

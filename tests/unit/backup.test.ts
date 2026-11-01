@@ -8,7 +8,7 @@ const NOW = new Date('2026-10-31T12:00:00.000Z');
 
 describe('копия данных', () => {
   it('копия читается обратно без потерь', () => {
-    const progress = { schemaVersion: 1 as const, checked: ['d1-teen-1'] };
+    const progress = { schemaVersion: 1 as const, checked: ['d1-self-1'] };
     const notes = { schemaVersion: 1 as const, fields: { 'd1-task-circle': 'Бабушка' }, keep: [] };
     const parsed = parseBackup(JSON.stringify(createBackup(progress, notes, NOW)));
     expect(parsed).toEqual({
@@ -78,5 +78,26 @@ describe('копия данных', () => {
   it('дата в предпросмотре по-русски, пустая дата не ломает вывод', () => {
     expect(formatBackupDate('')).toBe('');
     expect(formatBackupDate('2026-10-31T12:00:00.000Z')).toContain('октября 2026');
+  });
+
+  it('старая копия читается с той же миграцией, а записи не теряются', () => {
+    const parsed = parseBackup(
+      JSON.stringify({
+        format: 'family100-backup',
+        version: 1,
+        exportedAt: '2026-10-31T12:00:00.000Z',
+        progress: { schemaVersion: 1, checked: ['d1-teen-1', 'd1-self-1'] },
+        notes: {
+          schemaVersion: 1,
+          fields: { 'd5-abuse-task-adults': 'старая запись', 'd7-task-mission': 'миссия' },
+          keep: [],
+        },
+      }),
+    );
+    expect(parsed.ok && parsed.backup.progress.checked).toEqual(['d1-self-1']);
+    expect(parsed.ok && parsed.backup.notes.fields).toEqual({
+      'd5-abuse-task-adults': 'старая запись',
+      'd7-task-mission': 'миссия',
+    });
   });
 });

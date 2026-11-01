@@ -2,15 +2,13 @@
 import { getEntry, render } from 'astro:content';
 
 import CapitalAudit from '@/components/CapitalAudit.astro';
-import HeavyNotice from '@/components/HeavyNotice.astro';
-import MySituation from '@/components/MySituation.astro';
 import NoteField from '@/components/NoteField.astro';
 import type { Lesson } from '@/lib/lessons';
 import { href } from '@/lib/urls';
 
 interface Props {
   lesson: Lesson;
-  /** Подпись над заголовком: «День 1» или «День 5, часть 2». */
+  /** Подпись над заголовком: «День 1». */
   label: string;
 }
 
@@ -26,7 +24,6 @@ const Memo = memo ? (await render(memo)).Content : undefined;
     {label} · {data.minutes} минут
   </p>
   <h1>{data.title}</h1>
-  {data.heavy && <HeavyNotice topic={data.title.toLowerCase()} />}
   <p class="lesson__goal">{data.goal}</p>
 
   <aside class="callout" aria-label="Вопрос дня">
@@ -43,7 +40,6 @@ const Memo = memo ? (await render(memo)).Content : undefined;
   <section class="block block--task" aria-labelledby={`${data.task.id}-title`}>
     <h2 id={`${data.task.id}-title`}>Задание</h2>
     <p>{data.task.text}</p>
-    {data.task.tool === 'my-situation' && <MySituation />}
     {data.task.tool === 'capital-audit' && <CapitalAudit />}
     {data.task.fields.map((field) => (
       <NoteField id={field.id} label={field.label} sensitive={field.sensitive} />
@@ -70,22 +66,13 @@ const Memo = memo ? (await render(memo)).Content : undefined;
     <slot name="task" />
   </section>
 
-  <section
-    class="block block--checklists"
-    aria-labelledby={`${data.id}-checklists`.replace('/', '-')}
-  >
-    <h2 id={`${data.id}-checklists`.replace('/', '-')}>Чек-листы</h2>
-    {data.heavy && (
-      <p class="small muted">
-        Отметки хранятся только в этом браузере. На общем устройстве их может увидеть другой
-        человек, поэтому отмечать необязательно.
-      </p>
-    )}
+  <section class="block block--checklists" aria-labelledby={`${data.id}-checklists`}>
+    <h2 id={`${data.id}-checklists`}>Чек-листы</h2>
     <div class="checklists">
       <div>
-        <h3>Мне 14–17</h3>
-        <ul class="checklist" data-checklist="teen">
-          {data.teen.map((item) => (
+        <h3>Начинаю с себя</h3>
+        <ul class="checklist" data-checklist="self">
+          {data.self.map((item) => (
             <li>
               <label>
                 <input type="checkbox" data-item-id={item.id} />
@@ -96,9 +83,9 @@ const Memo = memo ? (await render(memo)).Content : undefined;
         </ul>
       </div>
       <div>
-        <h3>Мы уже пара</h3>
-        <ul class="checklist" data-checklist="couple">
-          {data.couple.map((item) => (
+        <h3>Делаем вместе</h3>
+        <ul class="checklist" data-checklist="together">
+          {data.together.map((item) => (
             <li>
               <label>
                 <input type="checkbox" data-item-id={item.id} />
@@ -126,8 +113,8 @@ const Memo = memo ? (await render(memo)).Content : undefined;
     </section>
   )}
 
-  <section class="block block--sources" aria-labelledby={`${data.id}-sources`.replace('/', '-')}>
-    <h2 id={`${data.id}-sources`.replace('/', '-')}>Источники</h2>
+  <section class="block block--sources" aria-labelledby={`${data.id}-sources`}>
+    <h2 id={`${data.id}-sources`}>Источники</h2>
     <ul>
       {data.sources.map((source) => (
         <li>

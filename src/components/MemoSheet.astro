@@ -14,7 +14,7 @@ interface Props extends VisibleMemo {
 
 const { memo, lesson, headingLevel, linkToSheet = false } = Astro.props;
 const { Content } = await render(memo);
-const { day, part, title: lessonTitle } = lesson.data;
+const { day, title: lessonTitle } = lesson.data;
 const Heading = `h${headingLevel}` as 'h1' | 'h2';
 ---
 
@@ -26,7 +26,7 @@ const Heading = `h${headingLevel}` as 'h1' | 'h2';
     Из курса «{SITE_TITLE}», день {day}: {lessonTitle}.
   </p>
   <p class="no-print small">
-    <a href={lessonHref(day, part)}>Открыть урок</a>
+    <a href={lessonHref(day)}>Открыть урок</a>
     {linkToSheet && (
       <>
         {' · '}

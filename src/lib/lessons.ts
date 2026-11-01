@@ -8,5 +8,5 @@ export async function visibleLessons(): Promise<Lesson[]> {
   const all = await getCollection('lessons');
   return all
     .filter((lesson) => isVisible(lesson.data.draft, import.meta.env.MODE, import.meta.env.DEV))
-    .sort((a, b) => a.data.day - b.data.day || a.data.order - b.data.order);
+    .sort((a, b) => a.data.day - b.data.day);
 }
